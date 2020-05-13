@@ -4,7 +4,7 @@
 1. Download -> DB
 2. DB -> Refresh -> DB
 3. DB -> Augment -> DB
-4. DB -> Play (Logs) ->DB
+4. DB -> Play (Logs) -> DB
 5. DB (Logs) -> Analysis (Analysis) -> DB
 6. DB (Analysis) -> Train (Logs) -> DB
 7. DB (Analysis) -> Visualization
@@ -21,7 +21,7 @@
 * Train		15%
 
 ## Progress
-* Download	0%
+* Download	10%
 * Refresh	0%
 * Augment	0%
 * DB 		0%
@@ -29,10 +29,11 @@
 * Analysis 	0%
 * Visualization 0%
 * Train		0%
-* Total		0%
+* Total		2%
 
 
 ## KIM
+* Chaos
 * Functional
 * Pythonic
 * Type hints and aliases
