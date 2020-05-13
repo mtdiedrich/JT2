@@ -22,7 +22,7 @@ Download + Refresh + Augment -> DB -> Play + Train + Analysis + Visualization
 * Analysis 	0%
 * Visualization 0%
 * Train		0%
-* _Total		0%_
+* Total		0%
 
 
 #KIM
