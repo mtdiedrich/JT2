@@ -1,9 +1,16 @@
-##JT2
+## JT2
 
-#Pipeline
-Download + Refresh + Augment -> DB -> Play + Train + Analysis + Visualization
+# Pipeline
+1. Download -> DB
+2. DB -> Refresh -> DB
+3. DB -> Augment -> DB
+4. DB -> Play (Logs) ->DB
+5. DB (Logs) -> Analysis (Analysis) -> DB
+6. DB (Analysis) -> Train (Logs) -> DB
+7. DB (Analysis) -> Visualization
 
-#Composition
+
+# Composition
 * Download	20%
 * Refresh	10%
 * Augment	15%
@@ -13,7 +20,7 @@ Download + Refresh + Augment -> DB -> Play + Train + Analysis + Visualization
 * Visualization 5%
 * Train		15%
 
-#Progress
+# Progress
 * Download	0%
 * Refresh	0%
 * Augment	0%
@@ -25,7 +32,7 @@ Download + Refresh + Augment -> DB -> Play + Train + Analysis + Visualization
 * Total		0%
 
 
-#KIM
+# KIM
 * Functional
 * Pythonic
 * Type hints and aliases
