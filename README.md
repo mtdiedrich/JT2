@@ -11,11 +11,11 @@
 
 
 ## Composition
-* Download	20%
+* Download	15%
 * Refresh	10%
 * Augment	15%
 * DB 		10%
-* Play		20%
+* Play		25%
 * Analysis 	5%
 * Visualization 5%
 * Train		15%
@@ -29,7 +29,7 @@
 * Analysis 	0%
 * Visualization 0%
 * Train		0%
-* Total		2%
+* Total		1.5%
 
 
 ## KIM
