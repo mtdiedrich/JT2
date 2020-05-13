@@ -1,6 +1,6 @@
-## JT2
+# JT2
 
-# Pipeline
+## Pipeline
 1. Download -> DB
 2. DB -> Refresh -> DB
 3. DB -> Augment -> DB
@@ -10,7 +10,7 @@
 7. DB (Analysis) -> Visualization
 
 
-# Composition
+## Composition
 * Download	20%
 * Refresh	10%
 * Augment	15%
@@ -20,7 +20,7 @@
 * Visualization 5%
 * Train		15%
 
-# Progress
+## Progress
 * Download	0%
 * Refresh	0%
 * Augment	0%
@@ -32,7 +32,7 @@
 * Total		0%
 
 
-# KIM
+## KIM
 * Functional
 * Pythonic
 * Type hints and aliases
