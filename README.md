@@ -21,7 +21,7 @@
 * Train		15%
 
 ## Progress
-* Download	10%
+* Download	100% (Refactor needed)
 * Refresh	0%
 * Augment	0%
 * DB 		0%
@@ -29,7 +29,7 @@
 * Analysis 	0%
 * Visualization 0%
 * Train		0%
-* Total		1.5%
+* Total		15%
 
 
 ## KIM
