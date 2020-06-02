@@ -21,18 +21,19 @@
 * Train		15%
 
 ## Progress
-* Download	100% (Refactor needed)
+* Download	90%
 * Refresh	0%
 * Augment	0%
-* DB 		0%
+* DB 		75%
 * Play		0%
 * Analysis 	0%
 * Visualization 0%
 * Train		0%
-* Total		15%
+* Total		21.5%
 
 
 ## KIM
+* iter(), next()
 * Chaos
 * Functional
 * Pythonic
