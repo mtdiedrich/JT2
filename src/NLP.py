@@ -12,7 +12,58 @@ def clean(data):
     data = data.replace('  ', ' ')
     return data
 
-def foo(df):
+def category_relevant_text(df):
+    pairs = {}
+    counts = {}
+    for episode in list(set(list(df['EpisodeID'].values))):
+        episode_df = df[df['EpisodeID']==episode]
+        for category in list(set(list(episode_df['Category'].values))):
+            episode_category_df = episode_df[episode_df['Category']==category]
+            combined_text = episode_category_df['Clue'] + ' ' + episode_category_df['Answer']
+            raw_text = ' '.join(list(combined_text.values))
+            categories = category.split(' ')
+            for cat in categories:
+                if cat in pairs:
+                    pairs[cat] += ' ' + raw_text
+                else:
+                    pairs[cat] = raw_text
+                if cat in counts:
+                    counts[cat] += 1
+                else:
+                    counts[cat] = 1
+    s = pd.Series(pairs.values()[0], index=pairs.keys())
+    return s
+
+def category_tfidf(df):
+    categories = list(set(list(df['Category'].values)))
+    tfidf = TfidfVectorizer(
+            binary=True,
+            strip_accents='ascii', 
+            sublinear_tf=True, 
+            ngram_range=(1,1)
+            )
+    tfidf_data = tfidf.fit_transform(categories).toarray()
+    df = pd.DataFrame(tfidf_data, index=categories, columns=tfidf.get_feature_names())
+    df = df**4
+    df = df.sum()
+    df = df.sort_values(ascending=False)
+    return df
+
+def tf(df):
+    cats = category_tfidf(df).head(10).index
+    df = category_relevant_text(df)
+    print(df)
+    """
+    df.index = [i.lower() for i in df.index]
+    df = df[df.index.isin(cats)]
+    text = df['Text'].values
+    tfidf = TfidfVectorizer(strip_accents='ascii', sublinear_tf=True, ngram_range=(1,1))
+    tfidf.fit(text)
+    return df
+    """
+
+
+def bar(df):
     start = time.time()
     text = [clean(s) for s in df['Clue'].values]
     tfidf = TfidfVectorizer(binary=True, strip_accents='ascii', sublinear_tf=True, ngram_range=(1,1))

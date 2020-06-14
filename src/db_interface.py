@@ -1,7 +1,7 @@
 import sqlite3
 
 def init_db():
-    conn = sqlite3.connect('JT2')
+    conn = sqlite3.connect('./data/JT2')
     try:
         conn.execute('''
                 CREATE TABLE corpus (

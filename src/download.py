@@ -67,10 +67,9 @@ def download(episodes):
                     category = category.replace(remove, '')
                 categories += [category]
         sys.stdout.write('\033[F')
-        print(i/max(episodes), flush=True)
     df = pd.DataFrame(clue_data)
     df.columns = ['EpisodeID', 'Round', 'Category', 'Order', 'Clue' ,'Answer']
-    conn = sqlite3.connect('JT2')
+    conn = sqlite3.connect('./data/JT2')
     corpus = pd.read_sql('select * from corpus', conn)
     corpus = corpus[[c for c in corpus.columns if c!='index']]
     df = pd.concat([df, corpus]).drop_duplicates()
@@ -92,10 +91,13 @@ def get_stale_on():
     lines = [l.replace('<a href="http://www.j-archive.com/showgame.php?game_id=', '').split('"')[0] for l in lines]
     episodes = [int(l) for l in lines]
     latest = max(episodes)
-    conn = sqlite3.connect('JT2')
+    conn = sqlite3.connect('./data/JT2')
     epis = [i[0] for i in pd.read_sql('select distinct episodeid from corpus', conn).values]
     old = max(epis) + 1
     new = latest
     stale_on = list(range(old, new+1))
-    print('Current DB is stale from episodes', old, 'to', new)
+    if len(stale_on) > 1:
+        print('Current DB is stale from episodes', old, 'to', new)
+    else:
+        print('DB is up-to-date')
     return stale_on
