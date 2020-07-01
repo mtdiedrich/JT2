@@ -1,13 +1,11 @@
 from bs4 import BeautifulSoup
+from tqdm import tqdm
 import pandas as pd
 import requests
 import time
 import sys
 import sqlite3
 
-# Still really needs mechanism to find most recent episode and download/parse/load all unacquired
-# Automatically
-# Would alsos be ideal to download each episode, then parse and load
 
 def replace_html(line):
     line = line.replace('&quot;', '"')
@@ -15,6 +13,7 @@ def replace_html(line):
     line = line.replace('&gt;', '>')
     line = line.replace('&amp;', '&')
     return replace_slash(line)
+
 
 def replace_slash(data):
     return data.replace(r"\'", "'")
@@ -25,7 +24,8 @@ def download(episodes):
     clue_data = []
     if len(episodes) < 2:
         return
-    for i in episodes:
+    #for i in episodes:
+    for i in tqdm(episodes):
         url = base + str(i)
         request = requests.get(url)
         soup = BeautifulSoup(request.text, 'html.parser')
@@ -54,7 +54,7 @@ def download(episodes):
                     if rnd == 'DJ':
                         ctg += 6
                 try:
-                    cat_name = categories[ctg] 
+                    cat_name = categories[ctg-1] 
                     clue_row = [i, rnd, cat_name, loc, clue_text,  answer]
                     clue_data += [clue_row]
                 except:
@@ -74,9 +74,10 @@ def download(episodes):
     corpus = corpus[[c for c in corpus.columns if c!='index']]
     df = pd.concat([df, corpus]).drop_duplicates()
     df = df.sort_values('EpisodeID').reset_index(drop=True)
-    df.to_sql('corpus', conn, if_exists='replace')
+    db_interface.write_to_db(df, 'CORPUS')
 
-def get_stale_on():
+
+def get_stale_on(full=False):
     all_seasons = 'http://www.j-archive.com/listseasons.php'
     request = requests.get(all_seasons)
     soup = BeautifulSoup(request.text, 'html.parser')
@@ -91,6 +92,8 @@ def get_stale_on():
     lines = [l.replace('<a href="http://www.j-archive.com/showgame.php?game_id=', '').split('"')[0] for l in lines]
     episodes = [int(l) for l in lines]
     latest = max(episodes)
+    if full:
+        return list(range(1, latest+1))
     conn = sqlite3.connect('./data/JT2')
     epis = [i[0] for i in pd.read_sql('select distinct episodeid from corpus', conn).values]
     old = max(epis) + 1
