@@ -1,44 +1,40 @@
 # JT2
-
-## Pipeline
-1. Download -> DB
-2. DB -> Refresh -> DB
-3. DB -> Augment -> DB
-4. DB -> Play (Logs) -> DB
-5. DB (Logs) -> Analysis (Analysis) -> DB
-6. DB (Analysis) -> Train (Logs) -> DB
-7. DB (Analysis) -> Visualization
-
+Download + store game and training data. Training and playing mechanism. Numerical and visual analytics.
 
 ## Composition
-* Download	15%
-* Refresh	10%
-* Augment	15%
+* Download	10%
+* Refresh	5%
+* Augment	Wiki 10%
+* Augment Sparknotes 10%
 * DB 		10%
-* Play		25%
-* Analysis 	5%
+* Play		20%
+* Analysis 	10%
 * Visualization 5%
-* Train		15%
+* Train		10%
+* Logging 10%
 
 ## Progress
-* Download	90%
-* Refresh	0%
-* Augment	0%
-* DB 		75%
-* Play		0%
+* Download	100% (would benefit from refactor)
+* Refresh	100%
+* Augment	Wiki 0%
+* Augment Sparknotes 75% (would benefit from refactor)
+* DB 		100%
+* Play		10%
 * Analysis 	0%
 * Visualization 0%
 * Train		0%
-* Total		21.5%
+* Logging 0%
+* Total		34.5%
 
 
 ## KIM
 * iter(), next()
-* Chaos
-* Functional
 * Pythonic
 * Type hints and aliases
 * Lambda
 * Inner functions
 * Functions as first-class objects
 * Decorators
+
+## TODO
+* Construct ranking system (I like the idea of ranking relative to comb cory distribution)
