@@ -17,18 +17,15 @@ pd.set_option('display.max_colwidth', 100)
 
 def main():
     conn = sqlite3.connect('./data/JT2')
-    cur = conn.cursor()
-    something = cur.execute('PRAGMA table_info(CORPUS)')
-    print(something)
+    df = db_interface.get_table('CORPUS')
+    print(df)
 
 
 if __name__ == "__main__":
-    """
     try:
         download.download(download.get_stale_on())
     except pd.io.sql.DatabaseError:
         download.download(download.get_stale_on(full=True))
-    #except:
-        #print('Cannot refresh DB')
-    """
+    except:
+        print('Cannot refresh DB')
     main()

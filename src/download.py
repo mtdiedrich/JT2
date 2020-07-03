@@ -78,15 +78,20 @@ def download(episodes):
     df.columns = ['EpisodeID', 'Round', 'Category', 'Order', 'Clue' ,'Answer']
     conn = sqlite3.connect('./data/JT2')
     corpus = pd.read_sql('select * from corpus', conn)
-    print(corpus)
-    print(df)
-    corpus = corpus[[c for c in corpus.columns if c!='index']]
+    try:
+        corpus = corpus.drop('index', axis=1)
+    except KeyError:
+        corpus = corpus
     df = pd.concat([corpus, df])
     df = df.drop_duplicates()
-    #df = df.sort_values('EpisodeID')
+    df = df.sort_values('EpisodeID')
     df = df.reset_index(drop=True)
-    print(df)
-    df.to_sql('CORPUS', conn, if_exists='replace', index=False)
+    try:
+        df.to_sql('CORPUS', conn, if_exists='replace', index=False)
+    except sqlite3.OperationalError:
+        conn.execute('DROP TABLE CORPUS;')
+        df.to_sql('CORPUS', conn, if_exists='replace', index=False)
+
 
 
 def get_stale_on(full=False):
