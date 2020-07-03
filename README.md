@@ -41,4 +41,6 @@ Download + store game and training data. Training and playing mechanism. Numeric
 ## TODO
 * Construct ranking system (I like the idea of ranking relative to comb cory distribution)
 * Clean up those imports, pal
-* Comment away
+* Function doc
+* Modules need more explicit/intuitive names, and respective imports
+* Lint on 100%

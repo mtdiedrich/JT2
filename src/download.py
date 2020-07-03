@@ -5,6 +5,15 @@ import requests
 import time
 import sys
 import sqlite3
+try:
+    from src import download, db_interface, NLP, mine_sn, augment, play
+except ModuleNotFoundError:
+    import download, db_interface, NLP, mine_sn, augment, play
+
+
+pd.set_option('display.width', 225)
+pd.set_option('display.max_rows', 225)
+pd.set_option('display.max_colwidth', 100)
 
 
 def replace_html(line):
@@ -24,7 +33,6 @@ def download(episodes):
     clue_data = []
     if len(episodes) < 2:
         return
-    #for i in episodes:
     for i in tqdm(episodes):
         url = base + str(i)
         request = requests.get(url)
@@ -66,15 +74,15 @@ def download(episodes):
                 for remove in removals:
                     category = category.replace(remove, '')
                 categories += [category]
-        sys.stdout.write('\033[F')
     df = pd.DataFrame(clue_data)
     df.columns = ['EpisodeID', 'Round', 'Category', 'Order', 'Clue' ,'Answer']
     conn = sqlite3.connect('./data/JT2')
     corpus = pd.read_sql('select * from corpus', conn)
     corpus = corpus[[c for c in corpus.columns if c!='index']]
+    print(corpus)
     df = pd.concat([df, corpus]).drop_duplicates()
     df = df.sort_values('EpisodeID').reset_index(drop=True)
-    db_interface.write_to_db(df, 'CORPUS')
+    df.to_sql('CORPUS', conn, if_exists='replace')
 
 
 def get_stale_on(full=False):

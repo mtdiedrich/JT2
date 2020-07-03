@@ -16,15 +16,14 @@ pd.set_option('display.max_colwidth', 100)
 
 
 def main():
-    df = db_interface.get_table('CORPUS')
-    print(df)
+    pass
 
 
 if __name__ == "__main__":
-    try:
-        download.download(download.get_stale_on())
-    except pd.io.sql.DatabaseError:
-        download.download(download.get_stale_on(full=True))
-    except:
-        print('Cannot refresh DB')
+    #try:
+    download.download(download.get_stale_on())
+    #except pd.io.sql.DatabaseError:
+        #download.download(download.get_stale_on(full=True))
+    #except:
+        #print('Cannot refresh DB')
     main()
