@@ -44,3 +44,4 @@ Download + store game and training data. Training and playing mechanism. Numeric
 * Function doc
 * Modules need more explicit/intuitive names, and respective imports
 * Lint on 100%
+* Add src/[packages] and update imports
