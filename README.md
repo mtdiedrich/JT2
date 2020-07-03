@@ -25,6 +25,7 @@ Download + store game and training data. Training and playing mechanism. Numeric
 * Train		0%
 * Logging 0%
 * Total		36.5%
+
 \* Demands refactoring
 
 
