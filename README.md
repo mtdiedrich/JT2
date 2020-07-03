@@ -19,12 +19,12 @@ Download + store game and training data. Training and playing mechanism. Numeric
 * Augment	Wiki 0%
 * Augment Sparknotes 75% (would benefit from refactor)
 * DB 		100%
-* Play		10%
+* Play		20%
 * Analysis 	0%
 * Visualization 0%
 * Train		0%
 * Logging 0%
-* Total		34.5%
+* Total		36.5%
 
 
 ## KIM
@@ -38,3 +38,4 @@ Download + store game and training data. Training and playing mechanism. Numeric
 
 ## TODO
 * Construct ranking system (I like the idea of ranking relative to comb cory distribution)
+* Clean up those imports, pal
