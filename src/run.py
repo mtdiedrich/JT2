@@ -1,9 +1,10 @@
 import pandas as pd
 import numpy as np
+import wikipedia
 import requests
 import sqlite3
 import string
-import wikipedia
+import time
 try:
     from src import download, db_interface, NLP, mine_sn, augment, play
 except ModuleNotFoundError:
@@ -11,6 +12,9 @@ except ModuleNotFoundError:
 
 
 pd.set_option('display.max_columns', 10)
+pd.set_option('display.width', 235)
+pd.set_option('display.max_colwidth', 50)
+pd.set_option('display.max_rows', 20)
 
 
 def main():
@@ -20,13 +24,10 @@ def main():
 
 
 if __name__ == "__main__":
-    #conn = sqlite3.connect('./data/JT2')
-    #conn.execute('DROP TABLE IF EXISTS CORPUS')
-    """
+    start = time.time()
     try:
         download.download()
     except:
         print('Cannot refresh DB')
-    """
-    #download.download()
     main()
+    print(time.time()-start)

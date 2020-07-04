@@ -1,15 +1,20 @@
 from bs4 import BeautifulSoup
+import multiprocessing as mp
 import pandas as pd
 import requests
 import sqlite3
 import tqdm
 import time
+import xml
 import re
 import os
 
 
 def download():
+
     print('Collecting links', flush=True)
+    print(flush=True)
+
     seasons = get_links()
     episodes = [i for j in [get_links(s) for s in tqdm.tqdm(seasons)] for i in j]
     conn = sqlite3.connect('./data/JT2')
@@ -17,13 +22,14 @@ def download():
     try:
         corpus = pd.read_sql('select * from corpus', conn)
         ids = list(set(list(corpus['EpisodeID'].values)))
-        print(len(ids))
     except:
+        corpus = None
         ids = []
 
-    fresh_episodes = []
+    fresh_episodes = episodes
 
-    for episode in tqdm.tqdm(episodes):
+    fresh_episodes = []
+    for episode in episodes:
         try:
             episode_id = re.findall(r'(?<=\#)\d+(?=\,)', str(episode))[0]
         except:
@@ -31,30 +37,37 @@ def download():
         if episode_id not in ids:
             fresh_episodes += [episode]
 
+    print(flush=True)
     print('Parsing episodes', flush=True)
     print(flush=True)
+
     dfs = []
+    incrementer = 0
+
     for episode in tqdm.tqdm(fresh_episodes):
         episode_soup = soup_for_you(episode)
         episode_df = parse_episode(episode_soup)
         dfs.append(episode_df)
-        """
-        try:
-            corpus = pd.concat([corpus, episode_df])
-        except UnboundLocalError:
-            corpus = episode_df
-        corpus = corpus.drop_duplicates()
-        corpus = corpus.sort_values(['EpisodeID','Round', 'Category', 'Value'])
-        corpus = corpus.reset_index(drop=True)
-        corpus.to_sql('CORPUS', conn, if_exists='replace', index=False)
-        """
-    df = pd.concat(dfs)
-    df = df.drop_duplicates()
-    df = df.sort_values(['EpisodeID','Round', 'Category', 'Value'])
-    df = df.reset_index(drop=True)
+        incrementer += 1
+
+        if incrementer % 10 == 0:
+            df = pd.concat([corpus] + dfs)
+            df = clean(df)
+            df.to_sql('CORPUS', conn, if_exists='replace', index=False)
+
+    df = pd.concat([corpus] + dfs)
+    df = clean(df)
     df.to_sql('CORPUS', conn, if_exists='replace', index=False)
 
     return df
+
+
+def clean(df):
+    df = df.drop_duplicates()
+    df = df.sort_values(['EpisodeID','Round', 'Category', 'Value'])
+    df = df.reset_index(drop=True)
+    return df
+
 
 
 def extract_link(link_data):
@@ -77,13 +90,6 @@ def get_links(link='https://j-archive.com/listseasons.php'):
     return link_data
 
 
-def meta_data(link_data):
-    link = extract_link(link_data)
-    episode_id = re.findall(r'(?<=\=)\d+(?=\")', str(link_data))[0]
-    date = re.findall(r'\d+-\d+-\d+', str(link_data))[0]
-    return link, episode_id, date
-
-
 def identify_rounds(soup):
     rounds = ['jeopardy_round', 'double_jeopardy_round', 'final_jeopardy_round']
     round_exists = {r: soup.find(id=r) != None for r in rounds}
@@ -92,16 +98,9 @@ def identify_rounds(soup):
 
 
 def soup_for_you(episode_data):
-
-    try:
-        link, episode_id, date = meta_data(episode_data)
-        page = requests.get(link)
-        soup = BeautifulSoup(page.text, 'lxml')
-    except IndexError:
-        link = extract_link(str(episode_data))
-        page = requests.get(link)
-        soup = BeautifulSoup(page.text, 'lxml')
-
+    link = extract_link(str(episode_data))
+    page = requests.get(link)
+    soup = BeautifulSoup(page.text, 'lxml')
     return soup
 
 
@@ -149,35 +148,34 @@ def get_answer(clue):
 
 
 def parse_episode(soup):
+    round_map = {'J': 1, 'DJ': 2, 'FJ': 3, 'TB': 4}
     episode_id = re.findall(r"(?<=\#)\d+(?=\,)", str(soup.title))[0]
     date = re.findall('(?<=aired )(.*?)(?=\<)', str(soup.title))[0]
-
-    rnd_map = {
-            'Jeopardy! Round': 1,
-            'Double Jeopardy! Round': 2,
-            'Final Jeopardy! Round': 3
-            }
-
     extra = soup.find('div', id='game_comments').text.strip()
-    rounds = get_round_data(soup)
-    data = []
+    categories = [c.text for c in soup.find_all('td', class_='category_name')]
 
-    for r in rounds:
-        categories = [c.text for c in r.find_all('td', class_='category_name')]
-        for clue in r.find_all('td', class_='clue'):
-            coord = get_coord(clue)
-            if max(coord) == 0:
-                continue
-            question = clue.find('td', class_='clue_text').text.strip()
-            try:
-                answer = get_answer(clue)
-            except AttributeError:
-                question = r.find('td', id='clue_FJ').text
-                answer = get_answer(r)
-            category = categories[coord[0]-1]
-            value = coord[1]
-            rnd = rnd_map[re.findall(r'(?<=[2>]{2})(.*?)(?=\<)', str(r))[0]]
-            data.append([date, episode_id, rnd, category, value, question, answer, extra])
+    data = []
+    for d in soup.find_all('div', onmouseover=True):
+        question_data = d.get('onmouseout').split("', '")
+        question = question_data[-1][:-2].replace("\\'", "'")
+
+        if 'j-archive' in question:
+            question = re.compile(r'<[^>]+>').sub('<*>', question)
+
+        answer_data = d.get('onmouseover')
+        answer_data = answer_data[answer_data.find('correct_response'):]
+        answer = answer_data.split('>')[1].split('<')[0]
+        coord_data = question_data[1].split('_')
+        rnd = coord_data[1]
+
+        if len(coord_data) != 5:
+            coord = (1, 1)
+        else:
+            coord = (int(coord_data[2]), int(coord_data[3]))
+
+        cat = categories[6*(round_map[rnd]-1)+coord[0]-1]
+        data.append([date, episode_id, round_map[rnd], 
+            cat, coord[1], question, answer, extra])
 
     columns = ['Date', 'EpisodeID', 'Round', 'Category', 'Value', 'Question', 'Answer', 'Extra']
     df = pd.DataFrame(data, columns=columns)
