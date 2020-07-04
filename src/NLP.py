@@ -1,4 +1,5 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
+from rake_nltk import Rake
 import numpy as np
 import pandas as pd
 import time
@@ -6,6 +7,10 @@ import string
 
 
 
+def keyword_data(text):
+    r = Rake()
+    r.extract_keywords_from_text(text)
+    return r.get_ranked_phrases_with_scores()
 
 
 def clean(data):

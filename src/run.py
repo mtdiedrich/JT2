@@ -10,22 +10,23 @@ except ModuleNotFoundError:
     import download, db_interface, NLP, mine_sn, augment, play
 
 
-pd.set_option('display.width', 225)
-pd.set_option('display.max_rows', 225)
-pd.set_option('display.max_colwidth', 100)
+pd.set_option('display.max_columns', 10)
 
 
 def main():
-    conn = sqlite3.connect('./data/JT2')
     df = db_interface.get_table('CORPUS')
+    print(flush=True)
     print(df)
 
 
 if __name__ == "__main__":
+    #conn = sqlite3.connect('./data/JT2')
+    #conn.execute('DROP TABLE IF EXISTS CORPUS')
+    """
     try:
-        download.download(download.get_stale_on())
-    except pd.io.sql.DatabaseError:
-        download.download(download.get_stale_on(full=True))
+        download.download()
     except:
         print('Cannot refresh DB')
+    """
+    #download.download()
     main()
