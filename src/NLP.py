@@ -1,5 +1,4 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-from rake_nltk import Rake
 import numpy as np
 import pandas as pd
 import time

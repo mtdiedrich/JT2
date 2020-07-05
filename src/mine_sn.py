@@ -7,6 +7,7 @@ import sqlite3
 
 # NOTE PSYCHOLOGY HAD MAJOR FIGURES (/characters/) TO BE PARSED
 # Obv needs refactored to reduce code duplication
+# Need method for checking duplicity (can be called in each get_fn())
 
 
 def get_govt_df():
@@ -195,6 +196,7 @@ def get_science_df():
             ]
     loc_terms = []
     for t in term_links:
+        print(t)
         temp = t.replace('https://www.sparknotes.com', '')
         request = requests.get(t)
         soup = BeautifulSoup(request.text, 'html.parser')

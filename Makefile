@@ -3,7 +3,7 @@ VIRTUALENV_DIR:=venv/
 PIP:=venv/bin/pip
 
 run:
-	. ${ACTIVATE}; python src/run.py
+	. ${ACTIVATE}; python src/run.py $(argument)
 
 clean:
 	find . -name "*.py[co]" -delete

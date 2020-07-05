@@ -5,7 +5,7 @@ import requests
 import sqlite3
 import tqdm
 import time
-import xml
+import lxml
 import re
 import os
 
@@ -16,7 +16,8 @@ def download():
     print(flush=True)
 
     seasons = get_links()
-    episodes = [i for j in [get_links(s) for s in tqdm.tqdm(seasons)] for i in j]
+    episodes_arr = [get_links(s) for s in tqdm.tqdm(seasons)]
+    episodes = [i for j in episodes_arr for i in j]
     conn = sqlite3.connect('./data/JT2')
     
     try:
@@ -91,7 +92,7 @@ def get_links(link='https://j-archive.com/listseasons.php'):
 
 
 def identify_rounds(soup):
-    rounds = ['jeopardy_round', 'double_jeopardy_round', 'final_jeopardy_round']
+    rounds = [r + 'jeopardy_round' for r in ['', 'double', 'final']]
     round_exists = {r: soup.find(id=r) != None for r in rounds}
     round_exists['tie_breaker'] = len(soup.find_all(class_='final_round')) > 1
     return round_exists
@@ -151,9 +152,12 @@ def get_question_coord(div):
 
 
 def get_answer(div):
-    answer_data = div.get('onmouseover')
-    answer_data = answer_data[answer_data.find('correct_response'):]
-    answer = answer_data.split('>')[1].split('<')[0]
+    soup = BeautifulSoup(div.get('onmouseover'), 'lxml')
+    try:
+        answer = soup.find('em', class_='correct_response').text
+    except AttributeError:
+        answer = soup.find('em').text
+    answer = answer.replace("\\'", "'")
     return answer
 
 

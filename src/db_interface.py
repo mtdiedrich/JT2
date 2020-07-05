@@ -5,7 +5,7 @@ from itertools import combinations
 
 def write_to_db(df, name):
     conn = sqlite3.connect('./data/JT2')
-    df.to_sql(name, conn, if_exists='replace')
+    df.to_sql(name, conn, if_exists='replace', index=False)
 
 def init_db():
     conn = sqlite3.connect('./data/JT2')
