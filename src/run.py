@@ -24,10 +24,15 @@ def main():
 
 
 if __name__ == "__main__":
+    conn = sqlite3.connect('./data/JT2')
+    conn.execute('DROP TABLE IF EXISTS CORPUS')
     start = time.time()
+    download.download()
+    """
     try:
         download.download()
     except:
         print('Cannot refresh DB')
+    """
     main()
     print(time.time()-start)

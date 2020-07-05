@@ -135,16 +135,26 @@ def get_coord(clue):
     return coord
 
 
-def get_answer(clue):
-    a_data = clue.find('div', onmouseover=True).get('onmouseover')
-    a_soup = BeautifulSoup(a_data, 'lxml')
+def if_none(cat):
+    if cat != None:
+        return [c.text for c in cat.find_all('td', class_='category_name')]
+    return None
 
-    try:
-        answer = a_soup.find('em', class_='correct_response').text
-    except AttributeError:
-        answer = a_soup.find('em').text
 
-    return answer.strip()
+def get_question_coord(div):
+    question_data = div.get('onmouseout').split("', '")
+    question = question_data[-1][:-2].replace("\\'", "'")
+    coord_data = question_data[1].split('_')
+    if 'j-archive' in question:
+        question = re.compile(r'<[^>]+>').sub('<*>', question)
+    return question, coord_data
+
+
+def get_answer(div):
+    answer_data = div.get('onmouseover')
+    answer_data = answer_data[answer_data.find('correct_response'):]
+    answer = answer_data.split('>')[1].split('<')[0]
+    return answer
 
 
 def parse_episode(soup):
@@ -152,32 +162,32 @@ def parse_episode(soup):
     episode_id = re.findall(r"(?<=\#)\d+(?=\,)", str(soup.title))[0]
     date = re.findall('(?<=aired )(.*?)(?=\<)', str(soup.title))[0]
     extra = soup.find('div', id='game_comments').text.strip()
-    categories = [c.text for c in soup.find_all('td', class_='category_name')]
+
+    j_cat = soup.find(id='jeopardy_round')
+    dj_cat = soup.find(id='double_jeopardy_round')
+    fj_cat = soup.find(id='final_jeopardy_round')
+    c_map = {'J': if_none(j_cat), 'DJ': if_none(dj_cat), 'FJ': if_none(fj_cat)}
 
     data = []
     for d in soup.find_all('div', onmouseover=True):
-        question_data = d.get('onmouseout').split("', '")
-        question = question_data[-1][:-2].replace("\\'", "'")
-
-        if 'j-archive' in question:
-            question = re.compile(r'<[^>]+>').sub('<*>', question)
-
-        answer_data = d.get('onmouseover')
-        answer_data = answer_data[answer_data.find('correct_response'):]
-        answer = answer_data.split('>')[1].split('<')[0]
-        coord_data = question_data[1].split('_')
+        question, coord_data = get_question_coord(d)
+        answer = get_answer(d)
         rnd = coord_data[1]
-
         if len(coord_data) != 5:
             coord = (1, 1)
         else:
             coord = (int(coord_data[2]), int(coord_data[3]))
 
-        cat = categories[6*(round_map[rnd]-1)+coord[0]-1]
+        if rnd == 'TB':
+            cs = [c.text for c in soup.find_all('td', class_='category_name')]
+            cat = cs[-1]
+        else:
+            cat = c_map[rnd][coord[0]-1]
         data.append([date, episode_id, round_map[rnd], 
             cat, coord[1], question, answer, extra])
 
-    columns = ['Date', 'EpisodeID', 'Round', 'Category', 'Value', 'Question', 'Answer', 'Extra']
+    columns = ['Date', 'EpisodeID', 'Round', 'Category', 
+            'Value', 'Question', 'Answer', 'Extra']
     df = pd.DataFrame(data, columns=columns)
 
     return df
