@@ -21,7 +21,7 @@ Download + store game and training data. Training and playing mechanism. Numeric
 * Augment Wiki  0%
 * Augment SN    75%\*
 * DB 		100%\*
-* Play		20%
+* Play		0%
 * Analysis 	0%
 * Visualization 0%
 * Train		0%
