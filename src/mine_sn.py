@@ -1,13 +1,71 @@
 from bs4 import BeautifulSoup
 import pandas as pd
 import requests
-import time
-import sys
 import sqlite3
+import tqdm
+import time
 
 # NOTE PSYCHOLOGY HAD MAJOR FIGURES (/characters/) TO BE PARSED
 # Obv needs refactored to reduce code duplication
 # Need method for checking duplicity (can be called in each get_fn())
+
+
+pd.set_option('display.width', 1000)
+
+
+def get_page_links(link):
+    request = requests.get(link)
+    soup = BeautifulSoup(request.text, 'lxml')
+    page_links = [str(l) for l in soup.findAll('a') if 'history' in str(l)]
+    links = []
+    for l in page_links:
+        link_data = l.split('>')
+        links.append(link + link_data[0].split('"')[1].replace('/history/', ''))
+    return links
+
+
+def mine_page(link):
+    link = link.strip()
+    key_people = parse_page(link + 'key-people/')
+    key_terms = parse_page(link + 'terms/')
+    df = pd.concat([key_people, key_terms])
+    df = df.reset_index(drop=True)
+    return df
+
+
+def parse_page(link):
+    page = requests.get(link)
+    soup = BeautifulSoup(page.text, 'lxml')
+    p_data = [s.text for s in soup.find_all('p')]
+    h3_data = [s.text for s in soup.find_all('h3')]
+    h4_data = [s.text for s in soup.find_all('h4')]
+
+    if len(h3_data) - len(p_data) > len(h4_data) - len(p_data):
+        h_data = h3_data
+    else:
+        h_data = h4_data
+
+    p_data = clean_sn_list(p_data)
+    h_data = clean_sn_list(h_data)
+
+    df = pd.DataFrame([h_data, p_data]).T
+    df.columns = ['Topic', 'Info']
+    return df
+
+
+def clean_sn_list(data):
+    drops = ['Take a Study Break', 'Terms', 'Events']
+    data = [d.replace('\n', '') for d in data]
+    data = [d for d in data if 'SparkNotes' not in d]
+    data = [d for d in data if 'Popular pages' not in d]
+    data = [d.strip() for d in data if d.strip() not in drops] 
+    return data
+
+
+def get_history_df():
+    links = get_page_links('https://www.sparknotes.com/history/')
+    df = pd.concat([mine_page(l) for l in tqdm.tqdm(links)])
+    print(df)
 
 
 def get_govt_df():
@@ -214,6 +272,7 @@ def get_science_df():
     return df
 
 
+"""
 def get_history_df():
     topic_links = [get_topic_links(l) for l in get_all_links()]
     data = []
@@ -235,6 +294,7 @@ def get_history_df():
     df = df.replace('Sextus Pompei', 'Sextus Pompey')
     write_to_db(df, 'HISTORY')
     return df
+"""
 
 
 def parse_history_terms(link):
@@ -344,16 +404,6 @@ def get_topic_links(link):
     return links
 
 
-def get_all_links():
-    url = 'https://www.sparknotes.com/history/'
-    request = requests.get(url)
-    soup = BeautifulSoup(request.text, 'html.parser')
-    page_links = [str(l) for l in soup.findAll('a') if 'history' in str(l)]
-    links = []
-    for l in page_links:
-        link_data = l.split('>')
-        links.append(url + link_data[0].split('"')[1].replace('/history/', ''))
-    return links
 
 
 def get_topic(link):
