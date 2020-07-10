@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QGridLayout
+from PyQt5.QtWidgets import QMessageBox, QMainWindow, QApplication, QLabel, QRadioButton
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot
 
@@ -10,9 +11,9 @@ import time
 import sys
 
 try:
-    from src import download, db_interface, NLP, mine_sn, play
+    from src import download, db_interface, NLP, mine_sn
 except ModuleNotFoundError:
-    import download, db_interface, NLP, mine_sn, play
+    import download, db_interface, NLP, mine_sn 
 
 
 pd.set_option('display.max_columns', 10)
@@ -21,38 +22,54 @@ pd.set_option('display.max_colwidth', 65)
 pd.set_option('display.max_rows', 100)
 
 
+
 class App(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.title = 'PyQt5 button - pythonspot.com'
-        self.centralwidget = QWidget()
-        self.lay = QVBoxLayout(self.centralwidget)
-        self.left = 10
-        self.top = 10
-        self.width = 320
-        self.height = 200
-        self.initUI()
+        self.data = self.get_random_data()
+        grid_layout = QGridLayout()
+        self.setLayout(grid_layout)
 
-    def initUI(self):
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
+        grid_layout.addWidget(QLabel('Category', self), 0, 0)
+        grid_layout.addWidget(QLabel('Question', self), 0, 1)
 
-        for i in range(6):
-            button = QPushButton(str(i), self)
-            button.setToolTip('This is an example button')
-            button.clicked.connect(self.on_click)
-            self.lay.addWidget(button)
+        for enum in enumerate(self.data.values):
+
+            category_label = QLabel(enum[1][3] + '   ', self)
+            question_label = QLabel(enum[1][5], self)
+            answer_button = QPushButton('ANSWER', self)
+            answer_button.setToolTip(enum[1][6])
+            yes_button = QRadioButton("Yes")
+            no_button = QRadioButton("No")
+            disinclude_button = QRadioButton("N/A")
+
+            grid_layout.addWidget(category_label, enum[0]+1, 0)
+            grid_layout.addWidget(question_label, enum[0]+1, 1)
+            grid_layout.addWidget(answer_button, enum[0]+1, 2)
+            grid_layout.addWidget(yes_button, enum[0]+1, 3)
+            grid_layout.addWidget(no_button, enum[0]+1, 4)
+            grid_layout.addWidget(disinclude_button, enum[0]+1, 5)
+
+        self.setWindowTitle('Basic Grid Layout')
         self.show()
 
-    @pyqtSlot()
-    def on_click(self):
-        print('PyQt5 button click')
+    def get_random_data(self):
+        df = db_interface.get_table('CORPUS')
+        df = df.sample(frac=1).head(1)
+        episode_id, episode_round = list(df.values[0][1:3])
+        conn = sqlite3.connect('./data/JT2')
+        query = "SELECT * FROM CORPUS WHERE EPISODEID = '{}' AND ROUND = '{}'"
+        query = query.format(episode_id, episode_round)
+        df = pd.read_sql(query, conn)
+        return df
 
 
 def main():
-    df = mine_sn.get_history_df()
-    print(df)
+    app = QApplication(sys.argv)
+    ex = App()
+    sys.exit(app.exec_())
+
 
 if __name__ == "__main__":
 
@@ -61,7 +78,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--update', action='store_true')
     parser.add_argument('--drop', action='store_true')
-    parser.add_argument('--main', action='store_true')
 
     args = parser.parse_args()
 
@@ -69,16 +85,10 @@ if __name__ == "__main__":
         conn = sqlite3.connect('./data/JT2')
         conn.execute('DROP TABLE IF EXISTS CORPUS')
 
-    if args.update:
+    if args.update or args.drop:
         try:
             download.download()
         except:
             print('Cannot refresh DB')
-
-    if args.main:
-        main()
-        print(time.time()-start)
-    else:
-        app = QApplication(sys.argv)
-        ex = App()
-        sys.exit( app.exec_() )
+    main()
+    print(time.time()-start)

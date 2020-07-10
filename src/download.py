@@ -27,8 +27,6 @@ def download():
         corpus = None
         ids = []
 
-    fresh_episodes = episodes
-
     fresh_episodes = []
     for episode in episodes:
         try:
@@ -68,7 +66,6 @@ def clean(df):
     df = df.sort_values(['EpisodeID','Round', 'Category', 'Value'])
     df = df.reset_index(drop=True)
     return df
-
 
 
 def extract_link(link_data):
