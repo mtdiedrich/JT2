@@ -31,8 +31,11 @@ def write_or_init_db(df):
 
 def get_table(table):
     conn = sqlite3.connect('./data/JT2')
-    df = pd.read_sql('SELECT * FROM ' + table.upper(), conn)
-    return df
+    try:
+        df = pd.read_sql('SELECT * FROM ' + table.upper(), conn)
+        return df
+    except pd.io.sql.DatabaseError:
+        return None
 
 
 def make_cards():

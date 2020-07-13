@@ -1,12 +1,15 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QGridLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QGridLayout, QScrollArea
 from PyQt5.QtWidgets import QMessageBox, QMainWindow, QApplication, QLabel, QRadioButton, QButtonGroup
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot, QCoreApplication
+from PyQt5.QtCore import Qt, QSize
+
 
 import pandas as pd
 import numpy as np
 import argparse
 import sqlite3
+import uuid
 import time
 import sys
 
@@ -35,9 +38,10 @@ class App(QWidget):
         self.lay.addWidget(QLabel('Category', self), 0, 0)
         self.lay.addWidget(QLabel('Question', self), 0, 1)
 
+
         for enum in enumerate(self.data.values):
-            category_label = QLabel(enum[1][3] + '   ', self)
-            question_label = QLabel(enum[1][5], self)
+            category_label = QLabel(enum[1][4] + '   ', self)
+            question_label = QLabel(enum[1][6], self)
             att_button = QPushButton("Attempt")
             abs_button = QPushButton("Abstain")
             buttons = [att_button, abs_button]
@@ -55,7 +59,8 @@ class App(QWidget):
         cancel_button.clicked.connect(quit)
 
         self.lay.addWidget(submit_button, len(self.data)+2, 3)
-        self.lay.addWidget(cancel_button, len(self.data)+2, 5)
+        self.lay.addWidget(cancel_button, len(self.data)+2, 4)
+        self.lay.setVerticalSpacing(1)
         self.setWindowTitle('Basic Grid Layout')
         self.show()
 
@@ -64,7 +69,7 @@ class App(QWidget):
         df = db_interface.get_table('CORPUS')
         df = df[df['Round'] < 3]
         df = df.sample(frac=1).head(1)
-        episode_id, episode_round = list(df.values[0][1:3])
+        episode_id, episode_round = list(df.values[0][2:4])
         conn = sqlite3.connect('./data/JT2')
         query = "SELECT * FROM CORPUS WHERE EPISODEID = '{}' AND ROUND = '{}'"
         query = query.format(episode_id, episode_round)
@@ -77,7 +82,7 @@ class App(QWidget):
             '''Click functionality for buttons.'''
             for btn in btns:
                 btn.hide()
-            self.lay.addWidget(QLabel(enum[1][6], self), enum[0]+1, 3)
+            self.lay.addWidget(QLabel(enum[1][7], self), enum[0]+1, 3)
             yes_button = QRadioButton("Correct")
             no_button = QRadioButton("Incorrect")
             corr_group = QButtonGroup(self)
@@ -93,17 +98,17 @@ class App(QWidget):
         data = []
         for grp in self.radio_buttons:
             row = list(grp[1][1])
-            row.append(grp[2])
+            uid = row[0]
             buttons = grp[0].buttons()
             if buttons[0].isChecked():
-                row.append(1)
+                temp = [uid, grp[2], 1]
             elif buttons[1].isChecked():
-                row.append(0)
+                temp = [uid, grp[2], 0]
             else:
-                row.append(-1)
-            data.append(row)
+                temp = [uid, grp[2], -1]
+            data.append(temp)
         df = pd.DataFrame(data)
-        df.columns = list(self.data.columns) + ['Attempt', 'Result'] 
+        df.columns = ['ID', 'Attempt', 'Result'] 
         conn = sqlite3.connect('./data/JT2')
         df.to_sql('RESULTS', conn, if_exists='append', index=False)
         quit()
@@ -112,31 +117,56 @@ class App(QWidget):
 
 def main():
     df = db_interface.get_table('RESULTS')
-    indices = {0: 'Incorrect', 1: 'Correct'}
-
-    knowledge = df['Result'].value_counts(normalize=True) * 100
-    knowledge.index = [indices[i] for i in knowledge.index]
-
-    att_df = df[df['Attempt']==1]
-    hit_rate = att_df['Result'].value_counts(normalize=True) * 100
-    hit_rate.index = [indices[i] for i in hit_rate.index]
-
-    abs_df = df[df['Attempt']==0]
-    aggression = abs_df['Result'].value_counts(normalize=True) * 100
-    aggression.index = [indices[i] for i in aggression.index]
-
-    print()
     print(df)
-    print('KNOWLEDGE')
-    print(knowledge)
-    print()
-    print('HIT RATE')
-    print(hit_rate)
-    print()
-    print('AGGRESSION')
-    print(aggression)
     print()
 
+    indices = {0: 'Incorrect', 1: 'Correct'}
+    print('KNOWLEDGE (correct rate)')
+    knowledge = df['Result'].value_counts(normalize=True)
+    knowledge.index = [indices[i] for i in knowledge.index]
+    knowledge_rate = knowledge.to_dict()['Correct']
+    print(knowledge_rate)
+    print()
+
+    print('SUCCESS (of attempted, correct)')
+    att_df = df[df['Attempt']==1]
+    att_acc = att_df['Result'].value_counts(normalize=True)
+    att_acc.index = [indices[i] for i in att_acc.index]
+    att_acc_rate = att_acc.to_dict()['Correct']
+    print(att_acc_rate)
+    print()
+ 
+    print('WISDOM (of not attempted, not correct)')
+    not_att_df = df[df['Attempt']==0]
+    not_att_acc = not_att_df['Result'].value_counts(normalize=True)
+    not_att_acc.index = [indices[i] for i in not_att_acc.index]
+    not_att_acc_rate =  not_att_acc.to_dict()['Incorrect']
+    print(not_att_acc_rate)
+    print()
+
+    indices = {0: 'Abstained', 1: 'Attempted'}
+    print('CONFIDENCE (attempt rate)')
+    confidence = df['Attempt'].value_counts(normalize=True)
+    confidence.index = [indices[i] for i in confidence.index]
+    confidence_rate = 1 - confidence.to_dict()['Attempted']
+    print(confidence_rate)
+    print()
+
+    print('FEAR (of correct, not attempted)')
+    corr_df = df[df['Result']==1]
+    corr_att = corr_df['Attempt'].value_counts(normalize=True)
+    corr_att.index = [indices[i] for i in corr_att.index]
+    corr_att_rate = 1 - corr_att.to_dict()['Attempted']
+    print(corr_att_rate)
+    print()
+
+    print('HUBRIS (of incorrect, attempted)')
+    incorr_df = df[df['Result']==0]
+    incorr_att = incorr_df['Attempt'].value_counts(normalize=True)
+    incorr_att.index = [indices[i] for i in incorr_att.index]
+    incorr_att_rate = incorr_att.to_dict()['Attempted']
+    print(incorr_att_rate)
+    print()
 
 if __name__ == "__main__":
 
@@ -145,25 +175,25 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--update', action='store_true')
     parser.add_argument('--drop', action='store_true')
-    parser.add_argument('--main', action='store_true')
+    parser.add_argument('--play', action='store_true')
 
     args = parser.parse_args()
 
-    if args.drop:
-        conn = sqlite3.connect('./data/JT2')
-        conn.execute('DROP TABLE IF EXISTS CORPUS')
-
     if args.update or args.drop:
+        if args.drop:
+            conn = sqlite3.connect('./data/JT2')
+            conn.execute('DROP TABLE IF EXISTS CORPUS')
+        download.download()
         try:
             download.download()
         except:
             print('Cannot refresh DB')
 
-    if args.main:
-        main()
-    else:
+    if args.play:
         app = QApplication(sys.argv)
         ex = App()
         sys.exit(app.exec_())
+    else:
+        main()
 
     print(time.time()-start)
