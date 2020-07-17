@@ -14,9 +14,9 @@ import time
 import sys
 
 try:
-    from src import download, db_interface, NLP, mine_sn
+    from src import download, db_interface, NLP, mine_sn, analysis
 except ModuleNotFoundError:
-    import download, db_interface, NLP, mine_sn 
+    import download, db_interface, NLP, mine_sn, analysis
 
 
 pd.set_option('display.max_columns', 10)
@@ -116,57 +116,17 @@ class App(QWidget):
 
 
 def main():
-    df = db_interface.get_table('RESULTS')
+
+    """
+    df = db_interface.get_table('CORPUS')
+    answer = 'George Washington'
+    temp = df[df['Question'].str.contains(answer)]
+    answers = ' '.join(list(temp['Answer'].values)).split(' ')
+    print(answers)
+    """
+    df = analysis.by_episode()
     print(df)
-    print()
 
-    indices = {0: 'Incorrect', 1: 'Correct'}
-    print('KNOWLEDGE (correct rate)')
-    knowledge = df['Result'].value_counts(normalize=True)
-    knowledge.index = [indices[i] for i in knowledge.index]
-    knowledge_rate = knowledge.to_dict()['Correct']
-    print(knowledge_rate)
-    print()
-
-    print('SUCCESS (of attempted, correct)')
-    att_df = df[df['Attempt']==1]
-    att_acc = att_df['Result'].value_counts(normalize=True)
-    att_acc.index = [indices[i] for i in att_acc.index]
-    att_acc_rate = att_acc.to_dict()['Correct']
-    print(att_acc_rate)
-    print()
- 
-    print('WISDOM (of not attempted, not correct)')
-    not_att_df = df[df['Attempt']==0]
-    not_att_acc = not_att_df['Result'].value_counts(normalize=True)
-    not_att_acc.index = [indices[i] for i in not_att_acc.index]
-    not_att_acc_rate =  not_att_acc.to_dict()['Incorrect']
-    print(not_att_acc_rate)
-    print()
-
-    indices = {0: 'Abstained', 1: 'Attempted'}
-    print('CONFIDENCE (attempt rate)')
-    confidence = df['Attempt'].value_counts(normalize=True)
-    confidence.index = [indices[i] for i in confidence.index]
-    confidence_rate = 1 - confidence.to_dict()['Attempted']
-    print(confidence_rate)
-    print()
-
-    print('FEAR (of correct, not attempted)')
-    corr_df = df[df['Result']==1]
-    corr_att = corr_df['Attempt'].value_counts(normalize=True)
-    corr_att.index = [indices[i] for i in corr_att.index]
-    corr_att_rate = 1 - corr_att.to_dict()['Attempted']
-    print(corr_att_rate)
-    print()
-
-    print('HUBRIS (of incorrect, attempted)')
-    incorr_df = df[df['Result']==0]
-    incorr_att = incorr_df['Attempt'].value_counts(normalize=True)
-    incorr_att.index = [indices[i] for i in incorr_att.index]
-    incorr_att_rate = incorr_att.to_dict()['Attempted']
-    print(incorr_att_rate)
-    print()
 
 if __name__ == "__main__":
 

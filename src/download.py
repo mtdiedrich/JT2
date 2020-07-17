@@ -191,7 +191,7 @@ def parse_episode(soup):
         else:
             coord = (int(coord_data[2]), int(coord_data[3]))
 
-        if rnd == 'TB':
+        if rnd == 4:
             cs = [c.text for c in soup.find_all('td', class_='category_name')]
             cat = cs[-1]
         else:

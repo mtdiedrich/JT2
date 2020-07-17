@@ -21,17 +21,17 @@ Download + store game and training data. Training and playing mechanism. Numeric
 * Augment Wiki  0%
 * Augment SN    75%\*
 * DB 		100%\*
-* Play		75%
-* Analysis 	0%
-* Visualization 0%
+* Play		100%
+* Analysis 	25% \*
+* Visualization 5%
 * Train		0%
 * Logging 	0%
-* Total		42.5%
+* Total		50.05%
 
 \* Demands refactoring
 
 
-## TODO
+## ADDITIONAL TODO
 * Construct ranking system (I like the idea of ranking relative to comb cory distribution)
 * Clean up those imports, pal
 * Function documentation comments
