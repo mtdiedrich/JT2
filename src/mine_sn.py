@@ -8,6 +8,7 @@ import time
 # NOTE PSYCHOLOGY HAD MAJOR FIGURES (/characters/) TO BE PARSED
 # Obv needs refactored to reduce code duplication
 # Need method for checking duplicity (can be called in each get_fn())
+# Frankly everything here needs refactored
 
 
 pd.set_option('display.width', 1000)
