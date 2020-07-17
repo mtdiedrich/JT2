@@ -2,11 +2,9 @@
 Download + store game and training data. Training and playing mechanism. Numerical and visual analytics.
 
 
-## DONE
 
 
-## v0.5 - v0.9 [94]
-* Rename minesn + fix imports [1]
+## v0.5 [101]
 * Research autoscheduler options (Luigi, Dask, Windows Scheduler) and make selection [2]
  * Implement autoscheduler [3]
 * Learn how to log [3]
@@ -20,6 +18,8 @@ Download + store game and training data. Training and playing mechanism. Numeric
 * Build training plan [5]
  * Implement training plan [8]
 * For answers in corpus, mined data, augment from Wikipedia for training [5]
+* When parsing replay, record DD status [5]
+ * Discount DD questions from modifying coryat when wrong [3]
 * When parsing replay, save correct/incorrect data [5]
  * With corr/incorr data, calculate team performance metrics by episode/round [3]
   * With player perform metrics by episode, analyze by getting my performamces relative to distribution [3]
@@ -27,7 +27,7 @@ Download + store game and training data. Training and playing mechanism. Numeric
  * Implement analysis plan [8]
 * Build central UI from which play, train, analyze derive [8]
 
-## v1
+## To v1
 * Refactoring [5]
 * Full function documentation [5]
 * Rename modules+functions to be explicit and intuitive [5]

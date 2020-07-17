@@ -14,9 +14,9 @@ import time
 import sys
 
 try:
-    from src import download, db_interface, NLP, mine_sn, analysis
+    from src import download, db_interface, analysis
 except ModuleNotFoundError:
-    import download, db_interface, NLP, mine_sn, analysis
+    import download, db_interface, analysis
 
 
 pd.set_option('display.max_columns', 10)
