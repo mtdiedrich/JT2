@@ -45,7 +45,7 @@ Download + store game and training data. Training and playing mechanism. Numeric
 * Rename minesn [1]
 * Research autoscheduler options (Lugigi, Dask, Windows Scheduler) and make selection<sup>5</sup> [2]
 * Implement autoscheduler<sup>[5]</sup> [3]
-* Develop plan to refactor minesn<sup>4/sup>[3]
+* Develop plan to refactor minesn<sup>4</sup>[3]
 * When parsing replay, save correct/incorrect data<sup>1</sup> [5]
 * With corr/incorr data, calculate team performance metrics by episode/round<sup>2 [1]</sup> [3]
 * With player perform metrics by episode, analyze by getting my performamces relative to distribution<sup>[2]</sup> [3]
@@ -56,6 +56,8 @@ Download + store game and training data. Training and playing mechanism. Numeric
 * Refactor minesn<sup>4</sup>[8]
 
 \* - Done at .9
-<sup>1</sup> - Task label
-<sup>[1]</sup> - Must be performed after label
+
+<sup>X</sup> - Task label
+
+<sup>[X]</sup> - Must be performed after label
 
