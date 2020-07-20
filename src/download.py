@@ -23,6 +23,11 @@ def download():
     episodes_arr = [get_links(s) for s in tqdm.tqdm(seasons)]
     episodes = [i for j in episodes_arr for i in j]
     fresh_episodes = get_fresh_episodes(episodes)
+    """
+    seasons = get_links()[:2]
+    episodes_arr = [get_links(s) for s in tqdm.tqdm(seasons)][:2]
+    episodes = [i for j in episodes_arr for i in j][:2]
+    """
     print('Parsing episodes', flush=True)
     parse_all_episodes(fresh_episodes)
     return None
@@ -170,6 +175,11 @@ def get_answer(div):
     return answer
 
 
+def get_daily_double(div):
+    data = [d for d in div.find_all('td') if 'daily_double' in str(d)]
+    return len(data) > 0
+
+
 def parse_episode(soup):
     round_map = {'J': 1, 'DJ': 2, 'FJ': 3, 'TB': 4}
     episode_id = re.findall(r"(?<=\#)\d+(?=\,)", str(soup.title))[0]
@@ -196,11 +206,12 @@ def parse_episode(soup):
             cat = cs[-1]
         else:
             cat = c_map[coord_data[1]][coord[0]-1]
-        row = [date, episode_id, rnd, cat, coord[1], ques, answer, extra]
+        row = [date, episode_id, rnd, cat, coord[1], ques, answer, get_daily_double(d), extra]
         uid = uuid.uuid3(uuid.NAMESPACE_DNS, '|'.join(str(i) for i in row))
         row = [str(uid)] + row
         data.append(row)
     columns = ['ID', 'Date', 'EpisodeID', 'Round', 'Category', 
-            'Value', 'Question', 'Answer', 'Extra']
+            'Value', 'Question', 'Answer', 'DailyDouble', 'Extra']
     df = pd.DataFrame(data, columns=columns)
+    print(df)
     return df

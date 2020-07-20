@@ -47,6 +47,8 @@ class App(QWidget):
                 front = ' '.join(words[:split])
                 back = ' '.join(words[split:])
                 question = front + '\n\r' + back
+            if bool(enum[1][8]):
+                question = 'DD: ' + question
             question_label = QLabel(question, self)
             att_button = QPushButton("Attempt")
             abs_button = QPushButton("Abstain")
@@ -122,7 +124,8 @@ class App(QWidget):
 
 
 def main():
-    analysis.foo()
+    df = analysis.by_episode()    
+    print(df)
     
 
 if __name__ == "__main__":
@@ -140,6 +143,7 @@ if __name__ == "__main__":
         if args.drop:
             conn = sqlite3.connect('./data/JT2')
             conn.execute('DROP TABLE IF EXISTS CORPUS')
+            conn.execute('DROP TABLE IF EXISTS RESULTS')
         download.download()
         try:
             download.download()

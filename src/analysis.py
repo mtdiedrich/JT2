@@ -7,6 +7,7 @@ try:
 except ModuleNotFoundError:
     import db_interface
 
+
 def directory():
     #DELETE ME
     tfidf()
@@ -19,25 +20,16 @@ def directory():
 def get_mean_std(series):
     return series.mean(), series.std()
 
+
 def percentiles():
     eps = by_episode()
     eps = eps.head(len(eps)-1)
     avg_team_ba = .783
     std_team_ba = .069
-
     for col in ['BA', 'Upper Bound BA', 'Proj BA']:
         pct = norm.cdf(eps[col], loc=avg_team_ba, scale=std_team_ba)
         eps[col+'%'] = [round(i, 3) for i in pct]
-
     return eps
-
-def foo():
-    pct = percentiles()
-    m = [round(p, 3) for p in pct.mean()]
-    m[0] = 'CORPUS'
-    df = pd.DataFrame(m, index=pct.columns).T
-    df = pd.concat([pct, df])
-    print(df)
 
 
 def get_full_results():
@@ -88,8 +80,9 @@ def show_performance_over_time(att='Coryat'):
 def get_coryat(df, divisor=1):
     temp = df.copy()
     temp = temp[temp['Attempt'].astype(bool)]
-    temp['Result'] = temp['Result'] * 2 - 1
-    coryat =  sum(temp['Result'] * temp['Value'] * 600)
+    temp['Result'] = temp['DailyDouble'] + temp['Result'] * 2 - 1
+    temp['Result'] = temp['Result'].apply(lambda x: 1 if x > 1 else x)
+    coryat = sum(temp['Result'] * temp['Value'] * 600)
     return coryat//divisor
 
 
@@ -118,11 +111,6 @@ def by_episode():
     df['Upper Bound BA'] += df['BA'] * (1 - df['Upper Bound BA'])
     df['Proj BA'] = ((df['BA'] + 1) * (df['Upper Bound BA'] + 1))**.5 - 1
     return df
-
-
-def full_analysis():
-    data = by_episode().sort_values('Coryat', ascending=False)
-    print(data)
 
 
 def tendencies():
