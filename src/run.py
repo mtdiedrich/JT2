@@ -38,10 +38,16 @@ class App(QWidget):
         self.lay.addWidget(QLabel('Category', self), 0, 0)
         self.lay.addWidget(QLabel('Question', self), 0, 1)
 
-
         for enum in enumerate(self.data.values):
             category_label = QLabel(enum[1][4] + '   ', self)
-            question_label = QLabel(enum[1][6], self)
+            question = enum[1][6]
+            if len(question) > 100:
+                words = question.split(' ')
+                split = len(words)//2
+                front = ' '.join(words[:split])
+                back = ' '.join(words[split:])
+                question = front + '\n\r' + back
+            question_label = QLabel(question, self)
             att_button = QPushButton("Attempt")
             abs_button = QPushButton("Abstain")
             buttons = [att_button, abs_button]
@@ -60,7 +66,7 @@ class App(QWidget):
 
         self.lay.addWidget(submit_button, len(self.data)+2, 3)
         self.lay.addWidget(cancel_button, len(self.data)+2, 4)
-        self.lay.setVerticalSpacing(1)
+        self.lay.setVerticalSpacing(0)
         self.setWindowTitle('Basic Grid Layout')
         self.show()
 
@@ -116,17 +122,8 @@ class App(QWidget):
 
 
 def main():
-
-    """
-    df = db_interface.get_table('CORPUS')
-    answer = 'George Washington'
-    temp = df[df['Question'].str.contains(answer)]
-    answers = ' '.join(list(temp['Answer'].values)).split(' ')
-    print(answers)
-    """
-    df = analysis.by_episode()
-    print(df)
-
+    analysis.foo()
+    
 
 if __name__ == "__main__":
 

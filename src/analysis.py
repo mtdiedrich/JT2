@@ -1,19 +1,74 @@
+from sklearn.feature_extraction.text import TfidfVectorizer
+from scipy.stats import norm
 import pandas as pd
 import numpy as np
 try:
-    from src import download, db_interface, NLP, mine_sn
+    from src import db_interface
 except ModuleNotFoundError:
-    import download, db_interface, NLP, mine_sn 
+    import db_interface
+
+def directory():
+    #DELETE ME
+    tfidf()
+    show_distribution()
+    show_performance_over_time()
+    full_analysis()
+    tendencies()
+
+
+def get_mean_std(series):
+    return series.mean(), series.std()
+
+def percentiles():
+    eps = by_episode()
+    eps = eps.head(len(eps)-1)
+    avg_team_ba = .783
+    std_team_ba = .069
+
+    for col in ['BA', 'Upper Bound BA', 'Proj BA']:
+        pct = norm.cdf(eps[col], loc=avg_team_ba, scale=std_team_ba)
+        eps[col+'%'] = [round(i, 3) for i in pct]
+
+    return eps
+
+def foo():
+    pct = percentiles()
+    m = [round(p, 3) for p in pct.mean()]
+    m[0] = 'CORPUS'
+    df = pd.DataFrame(m, index=pct.columns).T
+    df = pd.concat([pct, df])
+    print(df)
+
+
+def get_full_results():
+    res = db_interface.get_table('RESULTS')
+    corpus = db_interface.get_table('CORPUS')
+    df = res.merge(corpus, on='ID')
+    return df 
+
+
+def tfidf(column='Category'):
+    df = get_full_results() 
+    right = df[df['Result'].astype(bool)]
+    wrong = df[~df['Result'].astype(bool)]
+    right_corpus = ' '.join([r.lower() for r in right['Category'].values])
+    wrong_corpus = ' '.join([w.lower() for w in wrong['Category'].values])
+    vct = TfidfVectorizer(ngram_range=(1,2))
+    data = vct.fit_transform([wrong_corpus, right_corpus]).todense()
+    df = pd.DataFrame(data, columns=vct.get_feature_names()).T
+    df['Strength'] = df[1] - df[0]
+    df = df.sort_values('Strength', ascending=False)
+    return  df
 
 
 def show_distribution(mean, std, att='Coryat'):
     '''For given mean, std, display normal distribution'''
-    if att = 'Knowledge':
-        pass
-    elif att = 'Batting Average':
-        pass
+    if att == 'Knowledge':
+        return
+    elif att == 'Batting Average':
+        return
     else:
-        pass
+        return
 
 
 def show_performance_over_time(att='Coryat'):
@@ -22,53 +77,55 @@ def show_performance_over_time(att='Coryat'):
     # For now, can operate based on order in DB, but this isn't robust
     # Can this function and show_distribution be written in such a way that if-else is a function that takes operation as its own function?
     # Hence, both call same function for if-else logic, but use diff function as argument for operation
-     if att = 'Knowledge':
-        pass
-    elif att = 'Batting Average':
-        pass
+    if att == 'Knowledge':
+        return
+    elif att == 'Batting Average':
+        return
     else:
+        return
 
 
-def by_corpus():
-    res = db_interface.get_table('RESULTS')
-    corpus = db_interface.get_table('CORPUS')
-    df = res.merge(corpus, on='ID')
-    ids = df[['EpisodeID', 'Round']].drop_duplicates()
-    know = df['Result'].sum()/len(df)
-    df = df[df['Attempt'].astype(bool)]
-    df['Calc'] = df['Value'] * (df['Result'] * 2 - 1)
-    coryat = df['Calc'].sum() * 600 / len(ids)
-    batting_average = df['Result'].sum()/len(df)
-    data = {'Coryat': coryat, 'Knowledge': know, 'Batting Average': batting_average}
-    return data
+def get_coryat(df, divisor=1):
+    temp = df.copy()
+    temp = temp[temp['Attempt'].astype(bool)]
+    temp['Result'] = temp['Result'] * 2 - 1
+    coryat =  sum(temp['Result'] * temp['Value'] * 600)
+    return coryat//divisor
+
+
+def get_episode_stats(episode):
+    ids = list(set(list(episode['EpisodeID'].values)))
+    if len(ids) > 1:
+        ep_id = 'CORPUS'
+        coryat = get_coryat(episode, len(ids))
+    else:
+        ep_id = ids[0]
+        coryat = get_coryat(episode)
+    batting_average = sum(episode['Result'] * episode['Attempt']) / len(episode)
+    return [ep_id, coryat, batting_average]
 
 
 def by_episode():
-    # Really, this function should calculate call the above function to return analysis on each individual episode
-    # Then perform analysis on corpus
-    # And return all data together
-    # renamed to something like performance_metrics()
     res = db_interface.get_table('RESULTS')
     corpus = db_interface.get_table('CORPUS')
     df = res.merge(corpus, on='ID')
     ids = list(set(list(df['EpisodeID'].values)))
     dfs = [df[df['EpisodeID']==i] for i in ids]
-    data = []
-    for i in ids:
-        temp = df[df['EpisodeID']==i].copy()
-        know = temp['Result'].sum()/len(temp)
-        temp = temp[temp['Attempt']==1]
-        temp['Calc'] = temp['Value'] * (temp['Result'] * 2 - 1)
-        coryat = temp['Calc'].sum() * 600
-        batting_average = temp['Result'].sum()/len(temp)
-        data.append([i, coryat, know, batting_average])
-    crp = by_corpus()
-    data.append(['CORPUS', crp['Coryat'], crp['Knowledge'], crp['Batting Average']])
-    df = pd.DataFrame(data, columns=['ID', 'Proj Coryat', 'Knowledge', 'Batting Average'])
+    dfs.append(df)
+    df = pd.DataFrame([get_episode_stats(d) for d in dfs], columns = ['EpisodeID', 'Cryt', 'BA'])
+    df['Upper Bound BA'] = df['BA']
+    df['Upper Bound BA'] += df['BA'] * (1 - df['Upper Bound BA'])
+    df['Upper Bound BA'] += df['BA'] * (1 - df['Upper Bound BA'])
+    df['Proj BA'] = ((df['BA'] + 1) * (df['Upper Bound BA'] + 1))**.5 - 1
     return df
 
 
-def perform_analysis():
+def full_analysis():
+    data = by_episode().sort_values('Coryat', ascending=False)
+    print(data)
+
+
+def tendencies():
     df = db_interface.get_table('RESULTS')
     print(df)
     print()
