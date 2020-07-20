@@ -4,7 +4,7 @@ Download + store game and training data. Training and playing mechanism. Numeric
 
 
 
-## v0.51 [1/101]
+## v0.504 [1/101]
 * ~~Fix play to move long lines to next line [1]~~
 * Research autoscheduler options (Luigi, Dask, Windows Scheduler) and make selection [2]
   * Implement autoscheduler [3]
