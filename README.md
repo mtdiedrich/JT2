@@ -4,8 +4,13 @@ Download + store game and training data. Training and playing mechanism. Numeric
 
 
 
-## v0.536 [9/101]
+## v0.568 [17/101]
 * ~~Fix play to move long lines to next line [1]~~
+* ~~When parsing replay, record DD status [5]~~
+  * ~~Discount DD questions from modifying coryat when wrong [3]~~
+* ~~When parsing replay, save correct/incorrect data [5]~~
+  * ~~With corr/incorr data, calculate team performance metrics by episode/round [3]~~
+    * With player perform metrics by episode, analyze by getting my performamces relative to distribution [3]
 * Research autoscheduler options (Luigi, Dask, Windows Scheduler) and make selection [2]
   * Implement autoscheduler [3]
 * Learn how to log [3]
@@ -19,11 +24,6 @@ Download + store game and training data. Training and playing mechanism. Numeric
 * Build training plan [5]
   * Implement training plan [8]
 * For answers in corpus, mined data, augment from Wikipedia for training [5]
-* ~~When parsing replay, record DD status [5]~~
-  * ~~Discount DD questions from modifying coryat when wrong [3]~~
-* When parsing replay, save correct/incorrect data [5]
-  * With corr/incorr data, calculate team performance metrics by episode/round [3]
-    * With player perform metrics by episode, analyze by getting my performamces relative to distribution [3]
 * Develop analysis plan [5]
   * Implement analysis plan [8]
 * Build central UI from which play, train, analyze derive [8]
@@ -34,3 +34,6 @@ Download + store game and training data. Training and playing mechanism. Numeric
 * Rename modules+functions to be explicit and intuitive [5]
 * Add src/[packages] and update imports [5]
 * Lint [5]
+
+## Prospective v2
+* Add links to DB

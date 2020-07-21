@@ -13,10 +13,11 @@ import uuid
 import time
 import sys
 
+
 try:
-    from src import download, db_interface, analysis
+    from src import download, db_interface, analysis, corpus
 except ModuleNotFoundError:
-    import download, db_interface, analysis
+    import download, db_interface, analysis, corpus
 
 
 pd.set_option('display.max_columns', 10)
@@ -124,7 +125,10 @@ class App(QWidget):
 
 
 def main():
-    df = analysis.by_episode()    
+    full = analysis.get_full_results()
+    an = analysis.by_episode()
+    df = corpus.corpus_performance(full)
+    print(an)
     print(df)
     
 
@@ -144,7 +148,6 @@ if __name__ == "__main__":
             conn = sqlite3.connect('./data/JT2')
             conn.execute('DROP TABLE IF EXISTS CORPUS')
             conn.execute('DROP TABLE IF EXISTS RESULTS')
-        download.download()
         try:
             download.download()
         except:

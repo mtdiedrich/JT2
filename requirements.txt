@@ -2,10 +2,11 @@ requests==2.22.0
 beautifulsoup4==4.9.1
 flake8==3.8.3
 lxml==4.5.2
+matplotlib==3.3.0
 numpy==1.19.0
 pandas==1.0.5
 PyQt5==5.15.0
 pytest==5.4.3
-rake_nltk==1.0.4
 scikit_learn==0.23.1
+scipy==1.5.1
 tqdm==4.48.0

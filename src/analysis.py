@@ -1,35 +1,18 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import euclidean_distances
+from sklearn.cluster import KMeans
+
+from matplotlib import pyplot as plt
+
 from scipy.stats import norm
+
 import pandas as pd
 import numpy as np
+import string
 try:
     from src import db_interface
 except ModuleNotFoundError:
     import db_interface
-
-
-def directory():
-    #DELETE ME
-    tfidf()
-    show_distribution()
-    show_performance_over_time()
-    full_analysis()
-    tendencies()
-
-
-def get_mean_std(series):
-    return series.mean(), series.std()
-
-
-def percentiles():
-    eps = by_episode()
-    eps = eps.head(len(eps)-1)
-    avg_team_ba = .783
-    std_team_ba = .069
-    for col in ['BA', 'Upper Bound BA', 'Proj BA']:
-        pct = norm.cdf(eps[col], loc=avg_team_ba, scale=std_team_ba)
-        eps[col+'%'] = [round(i, 3) for i in pct]
-    return eps
 
 
 def get_full_results():
