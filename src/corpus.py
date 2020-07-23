@@ -1,3 +1,6 @@
+from sympy.solvers import solve
+from sympy import Symbol
+
 import pandas as pd
 import numpy as np
 import tqdm
@@ -7,39 +10,47 @@ try:
 except ModuleNotFoundError:
     import download, db_interface, analysis, metrics
 
-def get_years_change():
-    df = corpus_performance()
-    df = split_dates(df)
-    years = sorted(list(set(list(df['Y'].values))))
-    data = [[y] + corpus_distribution(df[df['Y']==y]) for y in years]
-    df = pd.DataFrame(data, columns=['Year', 'Cryt M', 'Cryt S', 'Bat M', 'Bat S'])
+
+def get_cryt_table():
+    df = db_interface.get_table('CORPUS')
+    grp = df.groupby('Date')
+    print('Calculating CRYT')
+    data = [calculate_team_performance(item) for key, item in tqdm.tqdm(grp)]
+    df = pd.DataFrame(data, columns=['Date', 'EpisodeID', 'Cryt', 'Bat'])
     return df
-
-
-def split_dates(df):
-    df['Y'] = df['Date'].apply(lambda x: x.split('-')[0])
-    df['M'] = df['Date'].apply(lambda x: x.split('-')[1])
-    df['D'] = df['Date'].apply(lambda x: x.split('-')[2])
-    return df
-
-
-def corpus_distribution(df):
-    cryt_mean = df['Cryt'].mean()
-    cyt_std = df['Cryt'].std()
-    bat_mean = df['Bat'].mean()
-    bat_std = df['Bat'].std()
-    return [cryt_mean, cyt_std, bat_mean, bat_std]
-
-
-def corpus_performance(df=db_interface.get_table('CORPUS')):
-    dfs = [df[df['EpisodeID']==e] for e in tqdm.tqdm(list(set(list(df['EpisodeID'].values))))]
-    performances = [calculate_team_performance(e) for e in tqdm.tqdm(dfs)]
-    df = pd.DataFrame(performances, columns=['Date', 'EpisodeID', 'Cryt', 'Bat'])
-    return df
-
 
 def calculate_team_performance(df):
     date = list(set(list(df['Date'].values)))[0]
     episode = list(set(list(df['EpisodeID'].values)))[0]
-    cryt, bat = metrics.get_episode_measure(df)
+    cryt = metrics.get_cryt(df)
+    bat = metrics.get_batting_average(df)
     return [date, episode, cryt, bat]
+
+def get_yearly_distribution_table():
+    df = get_cryt_table()
+    df['Year'] = [d.split('-')[0] for d in df['Date'].values]
+    grp = df.groupby('Year')
+    print(grp.mean())
+    print(grp.std())
+
+def get_all_round_batting_averages():
+    df = db_interface.get_table('CORPUS')
+    grp = df.groupby('Date')
+    print('Calculating Batting Averages')
+    data = [metrics.get_batting_average_by_round(item) for key, item in tqdm.tqdm(grp)]
+    data = [i for j in data for i in j]
+    return data
+
+def get_batting_average_chart():
+    data = get_all_round_batting_averages()
+    s = pd.Series(data).sort_values()
+    x = Symbol('x')
+    data = []
+    print('Calculating IID Batting Averages')
+    for i in tqdm.tqdm(s.values):
+        data.append(solve(x**3 - 3*x**2 + 3*x - i, x)[0])
+    df = pd.DataFrame([list(s.values), data]).T
+    df.columns = ['TM BAT', 'IID BAT']
+    df['PROJ BAT'] = ((df['TM BAT'] + 1) * (df['IID BAT'] + 1))**.5 - 1
+    df['PCT'] = df.index / len(df)
+    return df

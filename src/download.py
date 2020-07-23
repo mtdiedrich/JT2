@@ -28,39 +28,29 @@ def download():
     return None
 
 
-def parse_all_episodes(fresh_episodes, individual=True):
-    '''Parse all given episodes and write to DB.'''
-    dfs = []
-    conn = sqlite3.connect('./data/JT2')
-    for episode in enumerate(tqdm.tqdm(fresh_episodes)):
-        episode_soup = soup_for_you(episode[1])
-        episode_df = parse_episode(episode_soup)
-        if individual:
-            df = clean(episode_df)
-            df.to_sql('CORPUS', conn, if_exists='append', index=False)
-        else:
-            dfs.append(df)
-    if not individual:
-        df = pd.concat(dfs)
-        df = clean(df)
-        df.to_sql('CORPUS', conn, if_exists='append', index=False)
-    return None
+def get_links(link='https://j-archive.com/listseasons.php'):
+    '''Return links from given link.'''
+    page = requests.get(link)
+    soup = BeautifulSoup(page.text, 'lxml')
+    if 'listseasons' in link:
+        link_data = [l for l in soup.find_all('a') if 'season=' in str(l)]
+        link_data = [extract_link(l) for l in link_data]
+    else:
+        link_data = [l for l in soup.find_all('a') if 'game_id' in str(l)]
+    return link_data
 
 
-def get_corpus_and_ids():
-    '''Return J! corpus and episode IDs.'''
-    try:
-        corpus = db_interface.get_table('CORPUS')
-        ids = list(set(list(corpus['EpisodeID'].values)))
-    except:
-        #Need exception
-        ids = []
-    return ids
+def extract_link(link_data):
+    '''Extract link from link data.'''
+    base = 'https://www.j-archive.com/'  
+    link = re.findall(r'(?<=\")(.*?)(?=\")', str(link_data))[0]
+    link = base + link if 'j-archive' not in link else link
+    return link
 
 
 def get_fresh_episodes(episodes):
     '''Return list of episodes not in DB.'''
-    ids = get_corpus_and_ids()
+    ids = get_ids()
     fresh_episodes = []
     for episode in episodes:
         try:
@@ -72,32 +62,46 @@ def get_fresh_episodes(episodes):
     return fresh_episodes
 
 
+def get_ids():
+    '''Return episode IDs.'''
+    try:
+        corpus = db_interface.get_table('CORPUS')
+        return list(set(list(corpus['EpisodeID'].values)))
+    except:
+        return []
+
+def parse_all_episodes(fresh_episodes, individual=True):
+    '''Parse all given episodes and write to DB.'''
+    dfs = []
+    conn = sqlite3.connect('./data/JT2')
+    corpus = db_interface.get_table('CORPUS')
+    if corpus is None:
+        for episode in enumerate(tqdm.tqdm(fresh_episodes)):
+            episode_soup = soup_for_you(episode[1])
+            episode_df = parse_episode(episode_soup)
+            episode_df = clean(episode_df)
+            episode_df.to_sql('CORPUS', conn, if_exists='append', index=False)
+    else:
+        for episode in enumerate(tqdm.tqdm(fresh_episodes)):
+            episode_soup = soup_for_you(episode[1])
+            episode_df = parse_episode(episode_soup)
+            merged = episode_df.merge(corpus, how='left', indicator=True)
+            episode_df = clean(merged)
+            episode_df.to_sql('CORPUS', conn, if_exists='append', index=False)
+    return None
+
+
 def clean(df):
     '''Clean data before inserting into DB.'''
+    if '_merge' in df.columns:
+        df = df[df['_merge']=='left_only']
+        df = df.drop('_merge', axis=1)
     df = df.drop_duplicates()
     df = df.sort_values(['EpisodeID','Round', 'Category', 'Value'])
     df = df.reset_index(drop=True)
     return df
 
 
-def extract_link(link_data):
-    '''Extract link from link data.'''
-    base = 'https://www.j-archive.com/'  
-    link = re.findall(r'(?<=\")(.*?)(?=\")', str(link_data))[0]
-    link = base + link if 'j-archive' not in link else link
-    return link
-
-
-def get_links(link='https://j-archive.com/listseasons.php'):
-    '''Return links from given link.'''
-    page = requests.get(link)
-    soup = BeautifulSoup(page.text, 'lxml')
-    if 'listseasons' in link:
-        link_data = [l for l in soup.find_all('a') if 'season=' in str(l)]
-        link_data = [extract_link(l) for l in link_data]
-    else:
-        link_data = [l for l in soup.find_all('a') if 'game_id' in str(l)]
-    return link_data
 
 
 def identify_rounds(soup):

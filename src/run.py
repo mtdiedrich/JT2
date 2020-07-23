@@ -4,26 +4,32 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot, QCoreApplication
 from PyQt5.QtCore import Qt, QSize
 
+from sympy.solvers import solve
+from sympy import Symbol
+
+from datetime import datetime
 
 import pandas as pd
 import numpy as np
+
 import argparse
 import sqlite3
 import uuid
 import time
+import tqdm
 import sys
 
 
 try:
-    from src import download, db_interface, analysis, corpus
+    from src import download, db_interface, analysis, corpus, metrics
 except ModuleNotFoundError:
-    import download, db_interface, analysis, corpus
+    import download, db_interface, analysis, corpus, metrics
 
 
-pd.set_option('display.max_columns', 10)
+pd.set_option('display.max_columns', 20)
 pd.set_option('display.width', 235)
 pd.set_option('display.max_colwidth', 65)
-pd.set_option('display.max_rows', 100)
+pd.set_option('display.max_rows', 200)
 
 
 class App(QWidget):
@@ -42,7 +48,7 @@ class App(QWidget):
         for enum in enumerate(self.data.values):
             category_label = QLabel(enum[1][4] + '   ', self)
             question = enum[1][6]
-            if len(question) > 100:
+            if len(question) > 150:
                 words = question.split(' ')
                 split = len(words)//2
                 front = ' '.join(words[:split])
@@ -110,14 +116,14 @@ class App(QWidget):
             uid = row[0]
             buttons = grp[0].buttons()
             if buttons[0].isChecked():
-                temp = [uid, grp[2], 1]
+                temp = [datetime.now(), uid, grp[2], 1]
             elif buttons[1].isChecked():
-                temp = [uid, grp[2], 0]
+                temp = [datetime.now(), uid, grp[2], 0]
             else:
-                temp = [uid, grp[2], -1]
+                temp = [datetime.now(), uid, grp[2], -1]
             data.append(temp)
         df = pd.DataFrame(data)
-        df.columns = ['ID', 'Attempt', 'Result'] 
+        df.columns = ['SUBMITTED', 'ID', 'Attempt', 'Result'] 
         conn = sqlite3.connect('./data/JT2')
         df.to_sql('RESULTS', conn, if_exists='append', index=False)
         quit()
@@ -125,12 +131,21 @@ class App(QWidget):
 
 
 def main():
-    full = analysis.get_full_results()
-    an = analysis.by_episode()
-    df = corpus.corpus_performance(full)
-    print(an)
+    df = analysis.get_full_results()
+    grp = df.groupby(['EpisodeID', 'Round'])
+    data = []
+    for key, item in grp:
+        pers_bat = sum(item['Attempt'] * item['Result'])/len(item)
+        play_bat = metrics.get_batting_average(item)
+        x = Symbol('x')
+        iid_bat = solve(x**3 - 3*x**2 + 3*x - play_bat, x)[0]
+        proj = ((1 + iid_bat)*(1 + play_bat))**.5 - 1
+        grade = pers_bat / proj
+        data.append([key[0], key[1], pers_bat, play_bat, iid_bat, proj, grade])
+    cols = ['EpisodeID', 'Round', 'PERF', 'TEAM BAT', 'IID BAT', 'PROJ', 'GRD']
+    df = pd.DataFrame(data, columns=cols)
     print(df)
-    
+
 
 if __name__ == "__main__":
 
