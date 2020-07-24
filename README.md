@@ -4,18 +4,14 @@ Download + store game and training data. Training and playing mechanism. Numeric
 
 
 
-## v0.58 [20/101]
+## v0.6 [20/68]
 * ~~Fix play to move long lines to next line [1]~~
 * ~~When parsing replay, record DD status [5]~~
   * ~~Discount DD questions from modifying coryat when wrong [3]~~
 * ~~When parsing replay, save correct/incorrect data [5]~~
   * ~~With corr/incorr data, calculate team performance metrics by episode/round [3]~~
     * ~~With player perform metrics by episode, analyze by getting my performamces relative to distribution [3]~~
-* Research autoscheduler options (Luigi, Dask, Windows Scheduler) and make selection [2]
-  * Implement autoscheduler [3]
-* Learn how to log [3]
-  * Implement logging [5]
-* Identify other mining sources [3]
+* Identify other mining sources [2]
   * Implement mining on other sources [8]
 * Develop plan to refactor minesn [3]
   * Refactor minesn [8]
@@ -38,3 +34,6 @@ Download + store game and training data. Training and playing mechanism. Numeric
 ## Prospective v2
 * Add URL links to DB table
 * Better download logic
+* Essentially, there is a bug in download that prevents update.
+   * To fix, must write season urls to own table, episode URLs to own table, then mark episodes as not needed for update once downloaded
+* Auto-scheduler on Mac and Windows with appropriate logging
