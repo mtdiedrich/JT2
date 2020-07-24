@@ -4,9 +4,6 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot, QCoreApplication
 from PyQt5.QtCore import Qt, QSize
 
-from sympy.solvers import solve
-from sympy import Symbol
-
 from datetime import datetime
 
 import pandas as pd
@@ -131,19 +128,7 @@ class App(QWidget):
 
 
 def main():
-    df = analysis.get_full_results()
-    grp = df.groupby(['EpisodeID', 'Round'])
-    data = []
-    for key, item in grp:
-        pers_bat = sum(item['Attempt'] * item['Result'])/len(item)
-        play_bat = metrics.get_batting_average(item)
-        x = Symbol('x')
-        iid_bat = solve(x**3 - 3*x**2 + 3*x - play_bat, x)[0]
-        proj = ((1 + iid_bat)*(1 + play_bat))**.5 - 1
-        grade = pers_bat / proj
-        data.append([key[0], key[1], pers_bat, play_bat, iid_bat, proj, grade])
-    cols = ['EpisodeID', 'Round', 'PERF', 'TEAM BAT', 'IID BAT', 'PROJ', 'GRD']
-    df = pd.DataFrame(data, columns=cols)
+    df = analysis.comparative_performance()
     print(df)
 
 

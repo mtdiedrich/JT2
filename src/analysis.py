@@ -2,6 +2,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.cluster import KMeans
 
+from sympy.solvers import solve
+from sympy import Symbol
+
 from matplotlib import pyplot as plt
 
 from scipy.stats import norm
@@ -10,9 +13,9 @@ import pandas as pd
 import numpy as np
 import string
 try:
-    from src import db_interface
+    from src import db_interface, metrics
 except ModuleNotFoundError:
-    import db_interface
+    import db_interface, metrics
 
 
 def get_full_results():
@@ -148,3 +151,24 @@ def tendencies():
     incorr_att_rate = incorr_att.to_dict()['Attempted']
     print(incorr_att_rate)
     print()
+
+def comparative_performance():
+    df = get_full_results()
+    grp = df.groupby(['EpisodeID', 'Round'])
+    data = []
+    for key, item in grp:
+        pers_bat = sum(item['Attempt'] * item['Result'])/len(item)
+        play_bat = metrics.get_batting_average(item)
+        x = Symbol('x')
+        iid_bat = solve(x**3 - 3*x**2 + 3*x - play_bat, x)[0]
+        #proj is based on some back-of-the-napkin math
+        #essentially, the first player to buzz-in gets the answer right 4/5 of the time
+        proj = play_bat**2
+        grade = pers_bat / play_bat
+        sub = item['SUBMITTED'].values[0]
+        ex = item['Extra'].values[0]
+        data.append([sub, key[0], key[1], pers_bat, play_bat, iid_bat, proj, grade, ex])
+    cols = ['SUBMITTED', 'EpisodeID', 'Round', 'PERF', 'TEAM BAT', 'IID BAT', 'PROJ', 'GRADE', 'Extra']
+    df = pd.DataFrame(data, columns=cols)
+    df = df.sort_values('SUBMITTED', ascending=False)
+    return df

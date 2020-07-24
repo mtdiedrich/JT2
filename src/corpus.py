@@ -54,3 +54,11 @@ def get_batting_average_chart():
     df['PROJ BAT'] = ((df['TM BAT'] + 1) * (df['IID BAT'] + 1))**.5 - 1
     df['PCT'] = df.index / len(df)
     return df
+
+def correct_count_analysis(df = db_interface.get_table('CORPUS')):
+    df = df[df['Round'] < 3]
+    df = df[~df['DailyDouble'].astype(bool)]
+    df['AnsCorr'] = df['NumCorrect']>0
+    df['AnsCorr'] = df['AnsCorr'].astype(int)
+    l = len(df[df['AnsCorr']==1]) / len(df)
+    print(l)
