@@ -18,9 +18,9 @@ import sys
 
 
 try:
-    from src import download, db_interface, analysis, corpus, metrics
+    from src import download, db_interface, analysis, corpus, metrics, topics
 except ModuleNotFoundError:
-    import download, db_interface, analysis, corpus, metrics
+    import download, db_interface, analysis, corpus, metrics, topics
 
 
 pd.set_option('display.max_columns', 20)
@@ -128,8 +128,8 @@ class App(QWidget):
 
 
 def main():
-    df = analysis.comparative_performance()
-    print(df)
+    df = topics.analyze_topics()
+    print(df.head(100))
 
 
 if __name__ == "__main__":
