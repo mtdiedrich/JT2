@@ -1,47 +1,55 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+from collections import Counter
+
 import pandas as pd
+import numpy as np
+
+import sqlite3
 import tqdm
 
 try:
-    from src import db_interface
+    from src import db_interface, NLP
 except ModuleNotFoundError:
-    import db_interface
+    import db_interface, NLP
+
+def topic_distances():
+    df = answer_counts()
+    df = df[df['Length'] > 100]
+    to_transform = df['Doc'].values
+    answers = df['Answer'].values
+    keys = ['strip_accents', 'binary', 'sublinear_tf']
+    tfidf_config = {k: v for k, v in zip(keys, [None, False, True])}
+    tfidf_df = NLP.get_tfidf_df(to_transform, answers, tfidf_config)
+    corr = tfidf_df.corr()
+    print(corr)
+
 
 def analyze_topics():
     df = answer_counts()
-    vct = TfidfVectorizer()
     to_transform = df['Doc'].values
     answers = df['Answer'].values
-    sparse_X = vct.fit_transform(to_transform)
-    X = sparse_X.todense()
-    features = vct.get_feature_names()
-    tfidf_df_inv = pd.DataFrame(X, index=answers, columns=features)
-    tfidf_df = tfidf_df_inv.T
-    data = []
-    interest = df['Answer'].head(100)
-    for col in tqdm.tqdm(interest.values):
-        temp = tfidf_df[col].sort_values(ascending=False)
-        temp = temp[temp > 0]
-        data.append(temp.head(1).index)
-    df = pd.DataFrame(data, index=interest.values, columns=['classification'])
-    grp = df.groupby('classification')
-    for key, item in grp:
-        print(key)
-        print(item)
-        print()
-    """
-    sizes = grp.size()
-    percents = sizes/sizes.sum()
-    data = [sizes.values, percents.values]
-    idx = ['count', 'percent']
-    inv_df = pd.DataFrame(data, index=idx, columns=grp.indices)
-    df = inv_df.T
-    df['count'] = df['count'].astype(int)
-    df = df.sort_values('count', ascending=False)
-    df['cumsum'] = df['percent'].cumsum()
+
+    keys = ['strip_accents', 'binary', 'sublinear_tf']
+
+    base_config = {k: v for k, v in zip(keys, [None, False, False])}
+    base_tfidf_df = NLP.get_tfidf_df(to_transform, answers, base_config)
+    categories = NLP.top_tfidf_results(base_tfidf_df, 1)
+    categories.columns = ['category']
+    
+    tfidf_config = {k: v for k, v in zip(keys, [None, False, True])}
+    tfidf_df = NLP.get_tfidf_df(to_transform, answers, tfidf_config)
+    tfidf_results = NLP.top_tfidf_results(tfidf_df, 10)
+    tfidf_results['words'] = [' | '.join(list(v)) for v in tfidf_results.values]
+
+    df = categories.join(tfidf_results, how='outer')
+    conn = sqlite3.connect('./data/JT2')
+    df.to_sql('TFIDF', conn, if_exists='replace', index=True)
+    df = db_interface.get_table('TFIDF')
+    df.index = df['index']
+    df = df.drop('index', axis=1)
     return df
-    """
+
 
 def answer_counts(df = db_interface.get_table('CORPUS')):
     df = df[df['Answer']!='=']

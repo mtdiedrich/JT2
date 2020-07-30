@@ -37,3 +37,4 @@ Download + store game and training data. Training and playing mechanism. Numeric
 * Essentially, there is a bug in download that prevents update.
    * To fix, must write season urls to own table, episode URLs to own table, then mark episodes as not needed for update once downloaded
 * Auto-scheduler on Mac and Windows with appropriate logging
+* Move args to click (import click)

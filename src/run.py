@@ -18,14 +18,14 @@ import sys
 
 
 try:
-    from src import download, db_interface, analysis, corpus, metrics, topics
+    from src import download, db_interface, analysis, corpus, metrics, topics, NLP
 except ModuleNotFoundError:
-    import download, db_interface, analysis, corpus, metrics, topics
+    import download, db_interface, analysis, corpus, metrics, topics, NLP
 
 
 pd.set_option('display.max_columns', 20)
-pd.set_option('display.width', 235)
-pd.set_option('display.max_colwidth', 65)
+pd.set_option('display.width', 175)
+pd.set_option('display.max_colwidth', 200)
 pd.set_option('display.max_rows', 200)
 
 
@@ -128,9 +128,24 @@ class App(QWidget):
 
 
 def main():
-    df = topics.analyze_topics()
-    print(df.head(100))
+    corpus_df = db_interface.get_table('CORPUS')
+    tfidf_df = db_interface.get_table('TFIDF')
+    df = corpus_df.merge(tfidf_df, left_on='Answer', right_on='index')
+    df = df[['Date', 'EpisodeID', 'Category', 'Value', 'Question', 'Answer', 'category', 'words']]
+    df = df.drop_duplicates()
+    df = df.sample(frac=1)
+    ep_id = df['EpisodeID'].values[0]
+    cat = df['Category'].values[0]
+    df = df[df['EpisodeID']==ep_id]
+    df = df[df['Category']==cat]
+    df = df[['Category', 'Question', 'category', 'words', 'Answer']]
 
+    for row in df.values:
+        print('Question')
+        for r in row:
+            input()
+            print(r)
+        print()
 
 if __name__ == "__main__":
 
