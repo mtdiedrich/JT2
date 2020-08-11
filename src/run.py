@@ -15,8 +15,7 @@ import time
 import tqdm
 import sys
 
-
-import download, db_interface, analysis, manage_instance
+import download, db_interface, analysis, manage_instance, corpus
 
 
 pd.set_option('display.max_columns', 20)
@@ -123,15 +122,15 @@ class App(QWidget):
 
 
 def main():
-    """
-    df = analysis.tfidf()
+    df = corpus.get_cryt_table()
     print(df)
-    """
-    by_episode_df = analysis.by_episode()
-    comparative_df = analysis.comparative_performance()
-    print(by_episode_df)
     print()
-    print(comparative_df)
+    df = corpus.get_yearly_distribution_table()
+    print(df)
+    print()
+    df = corpus.calculate_team_performance(df)
+    print(df)
+    print()
 
 
 @click.command()
