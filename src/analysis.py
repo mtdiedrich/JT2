@@ -1,21 +1,51 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import euclidean_distances
+from sklearn.decomposition import TruncatedSVD
 from sklearn.cluster import KMeans
+from sklearn.linear_model import LogisticRegression
 
 from sympy.solvers import solve
 from sympy import Symbol
 
 from matplotlib import pyplot as plt
 
-from scipy.stats import norm
+from scipy.stats import norm, gmean
 
 import pandas as pd
 import numpy as np
 import string
 try:
-    from src import db_interface, metrics
+    from src import db_interface, metrics, NLP, topics
 except ModuleNotFoundError:
-    import db_interface, metrics
+    import db_interface, metrics, NLP, topics
+
+
+def foo():
+    df = db_interface.get_table('CORPUS')
+    labels = df['Answer'].values
+    docs = df['Question'].values
+    config = {
+            'strip_accents': None, 
+            'binary': True, 
+            'sublinear_tf': True
+            }
+    tfidf_df = NLP.get_tfidf_df(docs, labels, config).T
+    Y = tfidf_df.index
+    X = tfidf_df.values
+    model = LogisticRegression()
+    model.fit(X, Y)
+    df = df.sample(frac=1)
+    cat = df['Category'].values[0]
+    epid = df['EpisodeID'].values[0]
+    df = df[df['Category']==cat]
+    df = df[df['EpisodeID']==epid]
+    df.index = df['Answer']
+    
+    data = df.merge(tfidf_df, left_on=df.index, right_on=tfidf_df.index)
+    data.index = data['key_0']
+    data = data[data.columns[13:]]
+    df['p'] = model.predict(data.values)
+    print(df)
 
 
 def get_full_results():
@@ -31,7 +61,7 @@ def tfidf(column='Category'):
     wrong = df[~df['Result'].astype(bool)]
     right_corpus = ' '.join([r.lower() for r in right['Category'].values])
     wrong_corpus = ' '.join([w.lower() for w in wrong['Category'].values])
-    vct = TfidfVectorizer(ngram_range=(1,2))
+    vct = TfidfVectorizer(sublinear_tf=True)
     data = vct.fit_transform([wrong_corpus, right_corpus]).todense()
     df = pd.DataFrame(data, columns=vct.get_feature_names()).T
     df['Strength'] = df[1] - df[0]

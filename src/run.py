@@ -1,38 +1,33 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QGridLayout, QScrollArea
-from PyQt5.QtWidgets import QMessageBox, QMainWindow, QApplication, QLabel, QRadioButton, QButtonGroup
+from PyQt5.QtWidgets import (QWidget, QLabel, QPushButton, QButtonGroup, 
+        QRadioButton, QGridLayout, QApplication)
+from PyQt5.QtCore import pyqtSlot, QCoreApplication, Qt, QSize
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import pyqtSlot, QCoreApplication
-from PyQt5.QtCore import Qt, QSize
 
 from datetime import datetime
 
 import pandas as pd
 import numpy as np
 
-import argparse
 import sqlite3
+import click
 import uuid
 import time
 import tqdm
 import sys
 
 
-try:
-    from src import download, db_interface, analysis, corpus, metrics, topics, NLP
-except ModuleNotFoundError:
-    import download, db_interface, analysis, corpus, metrics, topics, NLP
+import download, db_interface, analysis, manage_instance
 
 
 pd.set_option('display.max_columns', 20)
-pd.set_option('display.width', 175)
-pd.set_option('display.max_colwidth', 200)
+pd.set_option('display.width', 225)
+pd.set_option('display.max_colwidth', 50)
 pd.set_option('display.max_rows', 200)
 
 
 class App(QWidget):
 
     def __init__(self):
-        '''init App'''
         super().__init__()
         self.data = self.get_random_data()
         self.lay = QGridLayout()
@@ -128,38 +123,27 @@ class App(QWidget):
 
 
 def main():
-    corpus_df = db_interface.get_table('CORPUS')
-    tfidf_df = db_interface.get_table('TFIDF')
-    df = corpus_df.merge(tfidf_df, left_on='Answer', right_on='index')
-    df = df[['Date', 'EpisodeID', 'Category', 'Value', 'Question', 'Answer', 'category', 'words']]
-    df = df.drop_duplicates()
-    df = df.sample(frac=1)
-    ep_id = df['EpisodeID'].values[0]
-    cat = df['Category'].values[0]
-    df = df[df['EpisodeID']==ep_id]
-    df = df[df['Category']==cat]
-    df = df[['Category', 'Question', 'category', 'words', 'Answer']]
+    """
+    df = analysis.tfidf()
+    print(df)
+    """
+    by_episode_df = analysis.by_episode()
+    comparative_df = analysis.comparative_performance()
+    print(by_episode_df)
+    print()
+    print(comparative_df)
 
-    for row in df.values:
-        print('Question')
-        for r in row:
-            input()
-            print(r)
-        print()
 
-if __name__ == "__main__":
-
-    start = time.time()
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--update', action='store_true')
-    parser.add_argument('--drop', action='store_true')
-    parser.add_argument('--play', action='store_true')
-
-    args = parser.parse_args()
-
-    if args.update or args.drop:
-        if args.drop:
+@click.command()
+@click.option('--play', '-p', is_flag=True)
+@click.option('--update', '-u', is_flag=True)
+@click.option('--drop', '-d', is_flag=True)
+@click.option('--create', '-c', is_flag=True)
+@click.option('--terminate', '-t', is_flag=True)
+@click.option('--new_key', '-n', is_flag=True)
+def click_main(play, update, drop, create, terminate, new_key):
+    if update or drop:
+        if drop:
             conn = sqlite3.connect('./data/JT2')
             conn.execute('DROP TABLE IF EXISTS CORPUS')
             conn.execute('DROP TABLE IF EXISTS RESULTS')
@@ -167,12 +151,21 @@ if __name__ == "__main__":
             download.download()
         except:
             print('Cannot refresh DB')
-
-    if args.play:
+    if play:
         app = QApplication(sys.argv)
         ex = App()
         sys.exit(app.exec_())
-    else:
+    if create:
+        print(manage_instance.run_create_process())
+    if terminate:
+        print(manage_instance.terminate_all_active_instances())
+    if new_key:
+        manage_instance.create_key_pair()
+    elif not (play or update or drop or create or terminate or new_key):
         main()
 
+
+if __name__ == "__main__":
+    start = time.time()
+    click_main()
     print(time.time()-start)
