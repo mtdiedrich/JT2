@@ -15,7 +15,7 @@ import time
 import tqdm
 import sys
 
-import download, db_interface, analysis, manage_instance, corpus
+import download, db_interface, analysis, corpus
 
 
 pd.set_option('display.max_columns', 20)
