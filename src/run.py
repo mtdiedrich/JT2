@@ -1,21 +1,20 @@
-from PyQt5.QtWidgets import (QWidget, QLabel, QPushButton, QButtonGroup, 
-        QRadioButton, QGridLayout, QApplication)
-from PyQt5.QtCore import pyqtSlot, QCoreApplication, Qt, QSize
-from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import (
+        QWidget, QLabel, QPushButton, QButtonGroup,
+        QRadioButton, QGridLayout, QApplication
+        )
 
 from datetime import datetime
 
 import pandas as pd
-import numpy as np
 
 import sqlite3
 import click
-import uuid
 import time
-import tqdm
 import sys
 
-import download, db_interface, analysis, corpus
+import download
+import db_interface
+import analysis
 
 
 pd.set_option('display.max_columns', 20)
@@ -114,7 +113,7 @@ class App(QWidget):
                 temp = [datetime.now(), uid, grp[2], -1]
             data.append(temp)
         df = pd.DataFrame(data)
-        df.columns = ['SUBMITTED', 'ID', 'Attempt', 'Result'] 
+        df.columns = ['SUBMITTED', 'ID', 'Attempt', 'Result']
         conn = sqlite3.connect('./data/JT2')
         df.to_sql('RESULTS', conn, if_exists='append', index=False)
         quit()
@@ -122,13 +121,7 @@ class App(QWidget):
 
 
 def main():
-    df = corpus.get_cryt_table()
-    print(df)
-    print()
-    df = corpus.get_yearly_distribution_table()
-    print(df)
-    print()
-    df = corpus.calculate_team_performance(df)
+    df = analysis.comparative_performance()
     print(df)
     print()
 
@@ -137,30 +130,19 @@ def main():
 @click.option('--play', '-p', is_flag=True)
 @click.option('--update', '-u', is_flag=True)
 @click.option('--drop', '-d', is_flag=True)
-@click.option('--create', '-c', is_flag=True)
-@click.option('--terminate', '-t', is_flag=True)
-@click.option('--new_key', '-n', is_flag=True)
-def click_main(play, update, drop, create, terminate, new_key):
+def click_main(play, update, drop):
     if update or drop:
         if drop:
             conn = sqlite3.connect('./data/JT2')
             conn.execute('DROP TABLE IF EXISTS CORPUS')
             conn.execute('DROP TABLE IF EXISTS RESULTS')
-        try:
-            download.download()
-        except:
-            print('Cannot refresh DB')
+        # This would do well with exception handling
+        download.download()
     if play:
         app = QApplication(sys.argv)
-        ex = App()
+        App()
         sys.exit(app.exec_())
-    if create:
-        print(manage_instance.run_create_process())
-    if terminate:
-        print(manage_instance.terminate_all_active_instances())
-    if new_key:
-        manage_instance.create_key_pair()
-    elif not (play or update or drop or create or terminate or new_key):
+    elif not (play or update or drop):
         main()
 
 

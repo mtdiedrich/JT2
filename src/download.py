@@ -1,19 +1,13 @@
 from bs4 import BeautifulSoup
-import multiprocessing as mp
+
 import pandas as pd
 import requests
 import sqlite3
 import uuid
 import tqdm
-import time
-import lxml
 import re
-import os
 
-try:
-    from src import db_interface
-except:
-    import db_interface
+import db_interface
 
 
 def download():
@@ -33,16 +27,18 @@ def get_links(link='https://j-archive.com/listseasons.php'):
     page = requests.get(link)
     soup = BeautifulSoup(page.text, 'lxml')
     if 'listseasons' in link:
-        link_data = [l for l in soup.find_all('a') if 'season=' in str(l)]
-        link_data = [extract_link(l) for l in link_data]
+        find = 'season='
+        link_data = [lnk for lnk in soup.find_all('a') if find in str(lnk)]
+        link_data = [extract_link(lnk) for lnk in link_data]
     else:
-        link_data = [l for l in soup.find_all('a') if 'game_id' in str(l)]
+        find = 'game_id'
+        link_data = [lnk for lnk in soup.find_all('a') if find in str(lnk)]
     return link_data
 
 
 def extract_link(link_data):
     '''Extract link from link data.'''
-    base = 'https://www.j-archive.com/'  
+    base = 'https://www.j-archive.com/'
     link = re.findall(r'(?<=\")(.*?)(?=\")', str(link_data))[0]
     link = base + link if 'j-archive' not in link else link
     return link
@@ -55,7 +51,7 @@ def get_fresh_episodes(episodes):
     for episode in episodes:
         try:
             episode_id = re.findall(r'(?<=\#)\d+(?=\,)', str(episode))[0]
-        except:
+        except IndexError:
             episode_id = re.findall(r'(?<=\=)\d+(?=\")', str(episode))[0]
         if episode_id not in ids:
             fresh_episodes += [episode]
@@ -68,6 +64,7 @@ def get_ids():
         corpus = db_interface.get_table('CORPUS')
         return list(set(list(corpus['EpisodeID'].values)))
     except:
+        # Need to test to correctly identify exception
         return []
 
 def parse_all_episodes(fresh_episodes, individual=True):
