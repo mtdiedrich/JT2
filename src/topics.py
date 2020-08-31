@@ -29,14 +29,17 @@ def analyze_topics():
     df = answer_counts()
     to_transform = df['Doc'].values
     answers = df['Answer'].values
-
     keys = ['strip_accents', 'binary', 'sublinear_tf']
 
     base_config = {k: v for k, v in zip(keys, [None, False, False])}
     base_tfidf_df = NLP.get_tfidf_df(to_transform, answers, base_config)
     categories = NLP.top_tfidf_results(base_tfidf_df, 1)
     categories.columns = ['category']
+    print(categories)
     
+    
+
+    """
     tfidf_config = {k: v for k, v in zip(keys, [None, False, True])}
     tfidf_df = NLP.get_tfidf_df(to_transform, answers, tfidf_config)
     tfidf_results = NLP.top_tfidf_results(tfidf_df, 10)
@@ -49,6 +52,7 @@ def analyze_topics():
     df.index = df['index']
     df = df.drop('index', axis=1)
     return df
+    """
 
 
 def answer_counts(df = db_interface.get_table('CORPUS')):

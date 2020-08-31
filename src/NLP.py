@@ -15,12 +15,12 @@ def get_tfidf_df(documents, labels, config):
     strp_accnts = config['strip_accents']
     bnry = config['binary']
     sblnr_tf = config['sublinear_tf']
-    vct = tfidfvectorizer(strip_accents=strp_accnts, binary=bnry, sublinear_tf=sblnr_tf)
+    vct = TfidfVectorizer(strip_accents=strp_accnts, binary=bnry, sublinear_tf=sblnr_tf)
     sparse_x = vct.fit_transform(documents)
     x = sparse_x.todense()
     features = vct.get_feature_names()
-    tfidf_df_inv = pd.dataframe(x, index=labels, columns=features)
-    tfidf_df = tfidf_df_inv.t
+    tfidf_df_inv = pd.DataFrame(x, index=labels, columns=features)
+    tfidf_df = tfidf_df_inv.T
     return tfidf_df
 
 
@@ -51,26 +51,4 @@ def cluster(to_transform, answers):
         temp = grp.get_group(c)[c]
         temp = temp.sort_values()
         print(temp)
-        print()
-
-def foo():
-    df = db_interface.get_table('CORPUS').head(100)
-    vct = TfidfVectorizer(binary=False, sublinear_tf=True)
-    sparse_x = vct.fit_transform(df['Question'].values)
-    x = sparse_x.todense()
-    features = vct.get_feature_names()
-    tfidf_df = pd.DataFrame(x, index=df['Question'].values, columns=features)
-    tfidf_df['label'] = tfidf_df.index
-    row_map = {row[-1]: row[:-1] for row in tfidf_df.values}
-    df = df[['Category', 'Question', 'Answer']]
-    df['TFIDF'] = [row_map[q] for q in df['Question'].values]
-
-    train_X, test_X, train_Y, test_Y = train_test_split(df['TFIDF'].values, df['Answer'].values)
-    train_X = [np.array(i).reshape(1,-1) for i in train_X]
-    model = LogisticRegression()
-    model.fit(train_X, train_Y)
-
-    for i, j in zip(test_X, test_Y):
-        print(j)
-        print(model.predict(i))
         print()

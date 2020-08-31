@@ -7,7 +7,28 @@ import pandas as pd
 
 import db_interface
 import metrics
+import string
 
+
+def correct_topic_comparison():
+    df = get_full_results()
+    class_df = db_interface.get_table('CLASSIFICATION')
+    df = df.merge(class_df, left_on='Answer', right_on='answer')
+    grp = df.groupby('Result')
+    """
+    for k, i in grp:
+        print(i.groupby('answer').count())
+    """
+    docs = [' '.join(list(item['classification'].values)) for key, item in grp]
+    docs = [s.translate(str.maketrans('', '', string.punctuation)) for s in docs]
+    keys = [k for k, i in grp]
+    vct = TfidfVectorizer(sublinear_tf=True)
+    X = vct.fit_transform(docs).todense()
+    df = pd.DataFrame(X, columns=vct.get_feature_names(), index=keys).T
+    df = df[[0, 1]]
+    df['DIFF'] = df[1] - df[0]
+    df = df.sort_values('DIFF', ascending=False)
+    return df
 
 def get_full_results():
     res = db_interface.get_table('RESULTS')

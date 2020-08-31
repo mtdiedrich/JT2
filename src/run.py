@@ -1,12 +1,13 @@
 from PyQt5.QtWidgets import (
         QWidget, QLabel, QPushButton, QButtonGroup,
-        QRadioButton, QGridLayout, QApplication
+        QRadioButton, QGridLayout, QApplication, QScrollArea, QHBoxLayout, QVBoxLayout
         )
 
 from datetime import datetime
 
 import pandas as pd
 
+import wikipedia
 import sqlite3
 import click
 import time
@@ -15,6 +16,9 @@ import sys
 import download
 import db_interface
 import analysis
+import visualization
+import topics
+import NLP
 
 
 pd.set_option('display.max_columns', 20)
@@ -28,6 +32,8 @@ class App(QWidget):
     def __init__(self):
         super().__init__()
         self.data = self.get_random_data()
+        self.scroll = QScrollArea() 
+
         self.lay = QGridLayout()
         self.setLayout(self.lay)
         self.radio_buttons = []
@@ -62,6 +68,7 @@ class App(QWidget):
         cancel_button = QPushButton('Close', self)
         submit_button.clicked.connect(self.submit)
         cancel_button.clicked.connect(quit)
+
 
         self.lay.addWidget(submit_button, len(self.data)+2, 3)
         self.lay.addWidget(cancel_button, len(self.data)+2, 4)
@@ -121,16 +128,32 @@ class App(QWidget):
 
 
 def main():
-    df = analysis.comparative_performance()
-    print(df)
-    print()
+    df = analysis.correct_topic_comparison()
+    m = df['DIFF'].mean()
+    s = df['DIFF'].std()
+    df = df[df['DIFF'] < m - s]
+
+    answers = df.index
+    df = db_interface.get_table('CLASSIFICATION')
+    df = df[df['classification'].isin(answers)]
+
+    for a in df['answer'].values[:5]:
+        p = wikipedia.page(a)
+        print(p.title)
+        print(p.content)
+        print(p.__dict__.keys())
+        print()
+
+
+
 
 
 @click.command()
 @click.option('--play', '-p', is_flag=True)
 @click.option('--update', '-u', is_flag=True)
 @click.option('--drop', '-d', is_flag=True)
-def click_main(play, update, drop):
+@click.option('--visualize', '-v', is_flag=True)
+def click_main(play, update, drop, visualize):
     if update or drop:
         if drop:
             conn = sqlite3.connect('./data/JT2')
@@ -142,6 +165,8 @@ def click_main(play, update, drop):
         app = QApplication(sys.argv)
         App()
         sys.exit(app.exec_())
+    if visualize:
+        visualization.grade_over_time()
     elif not (play or update or drop):
         main()
 
