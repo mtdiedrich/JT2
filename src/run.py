@@ -23,7 +23,7 @@ import NLP
 
 pd.set_option('display.max_columns', 20)
 pd.set_option('display.width', 225)
-pd.set_option('display.max_colwidth', 50)
+pd.set_option('display.max_colwidth', 140)
 pd.set_option('display.max_rows', 200)
 
 
@@ -129,23 +129,32 @@ class App(QWidget):
 
 def main():
     df = analysis.correct_topic_comparison()
-    m = df['DIFF'].mean()
-    s = df['DIFF'].std()
-    df = df[df['DIFF'] < m - s]
+    answers = list(reversed(df.index))
+    corpus = db_interface.get_table('CORPUS')
+    classifications = db_interface.get_table('CLASSIFICATION')
 
-    answers = df.index
-    df = db_interface.get_table('CLASSIFICATION')
-    df = df[df['classification'].isin(answers)]
+    relevant = classifications[classifications['classification']==answers[0]]
+    df = corpus[corpus['Answer'].isin(relevant['answer'].values)]
+    print(df[['Question', 'Answer']])
 
-    for a in df['answer'].values[:5]:
-        p = wikipedia.page(a)
-        print(p.title)
-        print(p.content)
-        print(p.__dict__.keys())
+    docs = []
+    labels = []
+    for k, i in df.groupby('Answer'):
+        labels.append(k)
+        docs.append(' '.join(i['Question'].values))
+
+    
+    config = {
+        'strip_accents': None,
+        'binary': False,
+        'sublinear_tf': True
+        }
+
+    tfidf_df = NLP.get_tfidf_df(docs, labels, config)
+    for c in tfidf_df.columns:
+        col = tfidf_df[c]
+        print(col.sort_values(ascending=False).head(10))
         print()
-
-
-
 
 
 @click.command()
@@ -160,6 +169,10 @@ def click_main(play, update, drop, visualize):
             conn.execute('DROP TABLE IF EXISTS CORPUS')
             conn.execute('DROP TABLE IF EXISTS RESULTS')
         # This would do well with exception handling
+        # Not important until new episodes are coming out
+        # Which won't happen until new episodes are being filmed
+        # Which won't happen while COVID is active
+        # So this can likely stay as-is for 6+ months
         download.download()
     if play:
         app = QApplication(sys.argv)
