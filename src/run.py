@@ -128,14 +128,12 @@ class App(QWidget):
 
 
 def main():
-    df = analysis.correct_topic_comparison()
-    answers = list(reversed(df.index))
     corpus = db_interface.get_table('CORPUS')
-    classifications = db_interface.get_table('CLASSIFICATION')
+    classifications = NLP.get_classifications(corpus)
 
-    relevant = classifications[classifications['classification']==answers[0]]
-    df = corpus[corpus['Answer'].isin(relevant['answer'].values)]
-    print(df[['Question', 'Answer']])
+    relevant = classifications[classifications['Classification']=='composer']
+    print(relevant)
+    df = corpus[corpus['Answer'].isin(relevant['Key'].values)]
 
     docs = []
     labels = []
@@ -163,6 +161,7 @@ def main():
 @click.option('--drop', '-d', is_flag=True)
 @click.option('--visualize', '-v', is_flag=True)
 def click_main(play, update, drop, visualize):
+    start = time.time()
     if update or drop:
         if drop:
             conn = sqlite3.connect('./data/JT2')
@@ -182,9 +181,8 @@ def click_main(play, update, drop, visualize):
         visualization.grade_over_time()
     elif not (play or update or drop):
         main()
+    print(time.time()-start)
 
 
 if __name__ == "__main__":
-    start = time.time()
     click_main()
-    print(time.time()-start)
