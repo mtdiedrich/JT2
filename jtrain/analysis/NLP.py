@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.cluster import KMeans
 from pipeline import db_interface
+from analysis import topics
 
 import matplotlib.pyplot as plt
 
@@ -10,7 +11,6 @@ import pandas as pd
 import numpy as np
 import tqdm
 
-import topics
 
 
 def get_weakness_words():

@@ -6,7 +6,7 @@ from sympy import Symbol
 
 import pandas as pd
 
-import metrics
+from . import metrics
 import string
 
 

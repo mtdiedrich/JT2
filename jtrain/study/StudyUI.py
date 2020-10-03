@@ -2,7 +2,10 @@ from PyQt5.QtWidgets import (
         QWidget, QLabel, QPushButton, QButtonGroup, QMainWindow, QLineEdit,
         QRadioButton, QGridLayout, QApplication, QScrollArea, QHBoxLayout, QVBoxLayout
         )
+
+from analysis import analysis, visualization, topics, NLP
 from pipeline import download, db_interface
+from . import study
 
 from datetime import datetime
 
@@ -14,11 +17,6 @@ import click
 import time
 import sys
 
-import analysis
-import visualization
-import topics
-import study
-import NLP
 
 
 class App(QWidget):
