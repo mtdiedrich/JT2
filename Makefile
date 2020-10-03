@@ -2,15 +2,12 @@ ACTIVATE:=venv/bin/activate
 VIRTUALENV_DIR:=venv/
 PIP:=venv/bin/pip
 
+reset: clean
+	pipreqs --force
+	${ACTIVATE}
+
 run:
 	. ${ACTIVATE}; python src/run.py $(argument)
-
-study:
-	. ${ACTIVATE}; python src/StudyUI.py
-	. ${ACTIVATE}; python src/StudyUI.py
-	. ${ACTIVATE}; python src/StudyUI.py
-	. ${ACTIVATE}; python src/StudyUI.py
-	. ${ACTIVATE}; python src/StudyUI.py
 
 clean:
 	find . -name "*.py[co]" -delete
@@ -28,5 +25,3 @@ ${ACTIVATE}: requirements.txt
 	${PIP} install --upgrade pip
 	${PIP} install -Ur requirements.txt
 	touch $@
-
-
