@@ -8,6 +8,7 @@ def write_to_db(df, name):
     conn = sqlite3.connect('./data/JT2')
     df.to_sql(name, conn, if_exists='replace', index=False)
 
+
 def init_db():
     conn = sqlite3.connect('./data/JT2')
     try:
@@ -24,16 +25,13 @@ def init_db():
         pass
     return conn
     
+
 def get_all_tables():
     conn = sqlite3.connect('./data/JT2')
     cursor = conn.cursor()
     cursor.execute('SELECT name from sqlite_master where type= "table"')
     return cursor.fetchall()
 
-def write_or_init_db(df):
-    conn = init_db()
-    df.to_sql('corpus', conn, if_exists='replace')
-    
 
 def get_table(table):
     conn = sqlite3.connect('./data/JT2')

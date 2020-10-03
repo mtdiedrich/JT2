@@ -131,10 +131,8 @@ class App(QWidget):
 
 def main():
     comparison = analysis.correct_topic_comparison()
-    #study_df = study.get_study_df_for_worst_topic()
-    #study_df.to_csv('./data/composer.csv', index=False)
-    #print(study_df)
-    print(comparison)
+    study_df = study.get_study_df_for_worst_topic()
+    print(db_interface.get_table('STUDYGUIDE'))
 
 @click.command()
 @click.option('--play', '-p', is_flag=True)

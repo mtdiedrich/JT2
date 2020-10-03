@@ -26,9 +26,8 @@ class App(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.data = pd.read_csv('./data/composer.csv')
+        self.data = db_interface.get_table('STUDYGUIDE')
         df = self.data.sample(frac=1)
-        print(df)
         completed_df = db_interface.get_table('STUDY') 
         temp_df = df[~df[['Topic', 'Answer', 'Word']].isin(completed_df)][['Topic', 'Answer', 'Word']]
         df = temp_df.merge(df, how='left')
