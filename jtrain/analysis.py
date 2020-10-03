@@ -1,11 +1,11 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
+from pipeline import db_interface
 
 from sympy.solvers import solve
 from sympy import Symbol
 
 import pandas as pd
 
-import db_interface
 import metrics
 import string
 

@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import (
         QWidget, QLabel, QPushButton, QButtonGroup, QMainWindow, QLineEdit,
         QRadioButton, QGridLayout, QApplication, QScrollArea, QHBoxLayout, QVBoxLayout
         )
+from pipeline import download, db_interface
 
 from datetime import datetime
 
@@ -13,8 +14,6 @@ import click
 import time
 import sys
 
-import download
-import db_interface
 import analysis
 import visualization
 import topics
