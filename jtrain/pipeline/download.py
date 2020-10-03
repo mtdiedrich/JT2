@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from pipeline import db_interface
 
 import pandas as pd
 import requests
@@ -6,8 +7,6 @@ import sqlite3
 import uuid
 import tqdm
 import re
-
-import db_interface
 
 
 def download():

@@ -1,3 +1,4 @@
+from pipeline import download, db_interface
 
 import pandas as pd
 
@@ -7,8 +8,6 @@ import click
 import time
 import sys
 
-import download
-import db_interface
 import analysis
 import visualization
 import topics
