@@ -18,6 +18,8 @@ import db_interface
 import analysis
 import visualization
 import topics
+import study
+import StudyUI
 import NLP
 
 
@@ -128,39 +130,19 @@ class App(QWidget):
 
 
 def main():
-    corpus = db_interface.get_table('CORPUS')
-    classifications = NLP.get_classifications(corpus)
-
-    relevant = classifications[classifications['Classification']=='composer']
-    print(relevant)
-    df = corpus[corpus['Answer'].isin(relevant['Key'].values)]
-
-    docs = []
-    labels = []
-    for k, i in df.groupby('Answer'):
-        labels.append(k)
-        docs.append(' '.join(i['Question'].values))
-
-    
-    config = {
-        'strip_accents': None,
-        'binary': False,
-        'sublinear_tf': True
-        }
-
-    tfidf_df = NLP.get_tfidf_df(docs, labels, config)
-    for c in tfidf_df.columns:
-        col = tfidf_df[c]
-        print(col.sort_values(ascending=False).head(10))
-        print()
-
+    comparison = analysis.correct_topic_comparison()
+    #study_df = study.get_study_df_for_worst_topic()
+    #study_df.to_csv('./data/composer.csv', index=False)
+    #print(study_df)
+    print(comparison)
 
 @click.command()
 @click.option('--play', '-p', is_flag=True)
-@click.option('--update', '-u', is_flag=True)
-@click.option('--drop', '-d', is_flag=True)
+@click.option('--update', is_flag=True)
+@click.option('--drop', is_flag=True)
 @click.option('--visualize', '-v', is_flag=True)
-def click_main(play, update, drop, visualize):
+@click.option('--study', '-s', is_flag=True)
+def click_main(play, update, drop, visualize, study):
     start = time.time()
     if update or drop:
         if drop:
@@ -179,7 +161,9 @@ def click_main(play, update, drop, visualize):
         sys.exit(app.exec_())
     if visualize:
         visualization.grade_over_time()
-    elif not (play or update or drop):
+    if study:
+        StudyUI.main()
+    elif not (play or update or drop or study or visualize):
         main()
     print(time.time()-start)
 
