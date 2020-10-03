@@ -1,3 +1,4 @@
+from analysis import analysis, visualization, topics, NLP
 from pipeline import download, db_interface
 
 import pandas as pd
@@ -8,10 +9,6 @@ import click
 import time
 import sys
 
-import analysis
-import visualization
-import topics
-import NLP
 
 def get_study_df_for_worst_topic():
     corpus = db_interface.get_table('CORPUS')

@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import (
         )
 from study import study, StudyUI
 from pipeline import download, db_interface
+from analysis import analysis, visualization, topics, NLP
 
 from datetime import datetime
 
@@ -15,10 +16,6 @@ import click
 import time
 import sys
 
-import analysis
-import visualization
-import topics
-import NLP
 
 
 pd.set_option('display.max_columns', 20)
@@ -128,9 +125,7 @@ class App(QWidget):
 
 
 def main():
-    comparison = analysis.correct_topic_comparison()
-    study_df = study.get_study_df_for_worst_topic()
-    print(db_interface.get_table('STUDYGUIDE'))
+    print(db_interface.get_table('CORPUS'))
 
 @click.command()
 @click.option('--play', '-p', is_flag=True)
@@ -146,10 +141,6 @@ def click_main(play, update, drop, visualize, study):
             conn.execute('DROP TABLE IF EXISTS CORPUS')
             conn.execute('DROP TABLE IF EXISTS RESULTS')
         # This would do well with exception handling
-        # Not important until new episodes are coming out
-        # Which won't happen until new episodes are being filmed
-        # Which won't happen while COVID is active
-        # So this can likely stay as-is for 6+ months
         download.download()
     if play:
         app = QApplication(sys.argv)

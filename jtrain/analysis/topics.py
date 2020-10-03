@@ -1,5 +1,6 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from pipeline import db_interface
+from analysis import NLP
 
 from collections import Counter
 
@@ -9,7 +10,6 @@ import numpy as np
 import sqlite3
 import tqdm
 
-import NLP
 
 def topic_distances():
     df = answer_counts()
