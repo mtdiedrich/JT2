@@ -12,6 +12,34 @@ import tqdm
 import topics, db_interface
 
 
+def get_weakness_words():
+    '''Returns DataFrame of answers + relevant words for weakest classified topic'''
+    corpus = db_interface.get_table('CORPUS')
+    classifications = NLP.get_classifications(corpus)
+
+    relevant = classifications[classifications['Classification']=='composer']
+    df = corpus[corpus['Answer'].isin(relevant['Key'].values)]
+
+    docs = []
+    labels = []
+    for k, i in df.groupby('Answer'):
+        labels.append(k)
+        docs.append(' '.join(i['Question'].values))
+
+    
+    config = {
+        'strip_accents': None,
+        'binary': False,
+        'sublinear_tf': True
+        }
+
+    tfidf_df = NLP.get_tfidf_df(docs, labels, config)
+    for c in tfidf_df.columns:
+        col = tfidf_df[c]
+        print(col.sort_values(ascending=False).head(10))
+        print()
+
+
 def get_classifications(df):
     docs_df = df_to_documents(df, 'Answer', 'Question')
     docs_df = docs_df[docs_df['Length'] > 3]

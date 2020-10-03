@@ -5,6 +5,13 @@ PIP:=venv/bin/pip
 run:
 	. ${ACTIVATE}; python src/run.py $(argument)
 
+study:
+	. ${ACTIVATE}; python src/StudyUI.py
+	. ${ACTIVATE}; python src/StudyUI.py
+	. ${ACTIVATE}; python src/StudyUI.py
+	. ${ACTIVATE}; python src/StudyUI.py
+	. ${ACTIVATE}; python src/StudyUI.py
+
 clean:
 	find . -name "*.py[co]" -delete
 	rm -r venv
@@ -21,3 +28,5 @@ ${ACTIVATE}: requirements.txt
 	${PIP} install --upgrade pip
 	${PIP} install -Ur requirements.txt
 	touch $@
+
+
