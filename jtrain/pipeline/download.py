@@ -32,6 +32,7 @@ def get_links(link='https://j-archive.com/listseasons.php'):
     else:
         find = 'game_id'
         link_data = [lnk for lnk in soup.find_all('a') if find in str(lnk)]
+    print(link_data)
     return link_data
 
 

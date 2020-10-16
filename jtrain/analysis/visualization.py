@@ -1,12 +1,12 @@
 from scipy.stats import norm
+from analysis import analysis
 
 import matplotlib.pyplot as plt
 
-import analysis
 
 def grade_over_time():
     df = analysis.comparative_performance()
-    df = df[df['Extra']=='']
+    #df = df[df['Extra']=='']
     df = df.reset_index(drop=True)
     df = df.sort_values('SUBMITTED')
     print()
