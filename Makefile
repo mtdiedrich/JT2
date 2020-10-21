@@ -17,9 +17,6 @@ lint:
 	. ${ACTIVATE}; flake8 ./src
 	. ${ACTIVATE}; flake8 ./tests
 
-test: ${ACTIVATE}
-	${VIRTUALENV_DIR}/bin/py.test -rw tests/
-
 ${ACTIVATE}: requirements.txt
 	test -d ${VIRTUALENV_DIR}/bin || virtualenv --python=python3 ${VIRTUALENV_DIR}
 	${PIP} install --upgrade pip
