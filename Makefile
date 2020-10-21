@@ -7,7 +7,7 @@ reset: clean
 	${ACTIVATE}
 
 run:
-	. ${ACTIVATE}; python JTrain/run.py $(argument)
+	. ${ACTIVATE}; python jtrain/run.py $(argument)
 
 clean:
 	find . -name "*.py[co]" -delete

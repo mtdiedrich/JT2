@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import (
         QRadioButton, QGridLayout, QApplication, QScrollArea, QHBoxLayout, QVBoxLayout
         )
 from study import study, StudyUI
-from pipeline import download, db_interface
+from pipeline import download, db_interface, aws
 from analysis import analysis, visualization, topics, NLP
 
 from datetime import datetime
@@ -11,6 +11,7 @@ from datetime import datetime
 import pandas as pd
 
 import wikipedia
+import pprint
 import sqlite3
 import click
 import time
@@ -18,7 +19,7 @@ import sys
 
 
 
-pd.set_option('display.max_columns', 20)
+pd.set_option('display.max_columns', 11)
 pd.set_option('display.width', 225)
 pd.set_option('display.max_colwidth', 140)
 pd.set_option('display.max_rows', 200)
@@ -125,16 +126,22 @@ class App(QWidget):
 
 
 def main():
-    print(db_interface.get_table('CORPUS'))
+    rds_config = aws.to_rds('./data/jtrainDW')
+    #pprint.pretty(rds_config)
 
 @click.command()
+@click.option('--init', '-i', is_flag=True)
 @click.option('--play', '-p', is_flag=True)
 @click.option('--update', is_flag=True)
 @click.option('--drop', is_flag=True)
 @click.option('--visualize', '-v', is_flag=True)
 @click.option('--study', '-s', is_flag=True)
-def click_main(play, update, drop, visualize, study):
+@click.option('--query', '-q', is_flag=True)
+def click_main(init, play, update, drop, visualize, study, query):
+    # can consolidate click options under singular UI
     start = time.time()
+    if init:
+        db_interface.init_db()
     if update or drop:
         if drop:
             conn = sqlite3.connect('./data/JT2')
@@ -150,7 +157,12 @@ def click_main(play, update, drop, visualize, study):
         visualization.grade_over_time()
     if study:
         StudyUI.main()
-    elif not (play or update or drop or study or visualize):
+    if query:
+        conn = sqlite3.connect('./data/JT2')
+        q = input('enter query: ')
+        df = pd.read_sql(q, conn)
+        print(df)
+    if not (play or update or drop or study or visualize or init or query):
         main()
     print(time.time()-start)
 

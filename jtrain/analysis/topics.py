@@ -35,25 +35,9 @@ def analyze_topics():
     categories.columns = ['category']
     print(categories)
     
-    
 
-    """
-    tfidf_config = {k: v for k, v in zip(keys, [None, False, True])}
-    tfidf_df = NLP.get_tfidf_df(to_transform, answers, tfidf_config)
-    tfidf_results = NLP.top_tfidf_results(tfidf_df, 10)
-    tfidf_results['words'] = [' | '.join(list(v)) for v in tfidf_results.values]
-
-    df = categories.join(tfidf_results, how='outer')
-    conn = sqlite3.connect('./data/JT2')
-    df.to_sql('TFIDF', conn, if_exists='replace', index=True)
-    df = db_interface.get_table('TFIDF')
-    df.index = df['index']
-    df = df.drop('index', axis=1)
-    return df
-    """
-
-
-def answer_counts(df = db_interface.get_table('CORPUS')):
+def answer_counts(df):
+    df = db_interface.get_table('CORPUS')
     df = df[df['Answer']!='=']
     grp = df.groupby('Answer')
     data = []

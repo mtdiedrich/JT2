@@ -3,14 +3,16 @@ import pandas as pd
 import string
 from itertools import combinations
 
+DB_LOC = './data/jtrainDW'
+conn = sqlite3.connect(DB_LOC)
 
 def write_to_db(df, name):
-    conn = sqlite3.connect('./data/JT2')
+    #conn = sqlite3.connect(DB_LOC)
     df.to_sql(name, conn, if_exists='replace', index=False)
 
 
 def init_db():
-    conn = sqlite3.connect('./data/JT2')
+    #conn = sqlite3.connect(DB_LOC)
     try:
         conn.execute('''
                 CREATE TABLE corpus (
@@ -27,14 +29,14 @@ def init_db():
     
 
 def get_all_tables():
-    conn = sqlite3.connect('./data/JT2')
+    #conn = sqlite3.connect(DB_LOC)
     cursor = conn.cursor()
     cursor.execute('SELECT name from sqlite_master where type= "table"')
     return cursor.fetchall()
 
 
 def get_table(table):
-    conn = sqlite3.connect('./data/JT2')
+    #conn = sqlite3.connect(DB_LOC)
     try:
         df = pd.read_sql('SELECT * FROM ' + table.upper(), conn)
         return df

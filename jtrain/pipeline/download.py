@@ -66,6 +66,7 @@ def get_ids():
         # Need to test to correctly identify exception
         return []
 
+
 def parse_all_episodes(fresh_episodes, individual=True):
     '''Parse all given episodes and write to DB.'''
     dfs = []
@@ -96,8 +97,6 @@ def clean(df):
     df = df.sort_values(['EpisodeID','Round', 'Category', 'Value'])
     df = df.reset_index(drop=True)
     return df
-
-
 
 
 def identify_rounds(soup):
