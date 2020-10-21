@@ -1,5 +1,5 @@
 # JT2
-A Python utility to play J! Datacollection, training and playing mechanism, numerical and visual analytics.
+A Python utility to play J! Data collection, training and playing mechanism, numerical and visual analytics.
 
 
 ## TODO
