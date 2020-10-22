@@ -5,18 +5,21 @@ from PyQt5.QtWidgets import (
 from study import study, StudyUI
 from pipeline import download, db_interface, aws
 from analysis import analysis, visualization, topics, NLP
+from play import alex 
 
 from datetime import datetime
 
 import pandas as pd
 
 import wikipedia
-import pprint
 import sqlite3
+import random
 import click
 import time
 import sys
 
+
+DB_LOC = './data/jtrainDW'
 
 
 pd.set_option('display.max_columns', 11)
@@ -80,7 +83,7 @@ class App(QWidget):
         df = df[df['Round'] < 3]
         df = df.sample(frac=1).head(1)
         episode_id, episode_round = list(df.values[0][2:4])
-        conn = sqlite3.connect('./data/JT2')
+        conn = sqlite3.connect(DB_LOC)
         query = "SELECT * FROM CORPUS WHERE EPISODEID = '{}' AND ROUND = '{}'"
         query = query.format(episode_id, episode_round)
         df = pd.read_sql(query, conn)
@@ -119,15 +122,23 @@ class App(QWidget):
             data.append(temp)
         df = pd.DataFrame(data)
         df.columns = ['SUBMITTED', 'ID', 'Attempt', 'Result']
-        conn = sqlite3.connect('./data/JT2')
+        conn = sqlite3.connect(DB_LOC)
         df.to_sql('RESULTS', conn, if_exists='append', index=False)
         quit()
         return None
 
 
 def main():
-    rds_config = aws.to_rds('./data/jtrainDW')
-    #pprint.pretty(rds_config)
+    for i in range(5):
+        q = alex.Trebek()
+        print(q.category)
+        print(q.question)
+        print(q.options)
+        input('press enter')
+        print(q.answer)
+        input('press enter')
+        print()
+
 
 @click.command()
 @click.option('--init', '-i', is_flag=True)
@@ -137,14 +148,15 @@ def main():
 @click.option('--visualize', '-v', is_flag=True)
 @click.option('--study', '-s', is_flag=True)
 @click.option('--query', '-q', is_flag=True)
-def click_main(init, play, update, drop, visualize, study, query):
+@click.option('--rds', is_flag=True)
+def click_main(init, play, update, drop, visualize, study, query, rds):
     # can consolidate click options under singular UI
     start = time.time()
     if init:
         db_interface.init_db()
     if update or drop:
         if drop:
-            conn = sqlite3.connect('./data/JT2')
+            conn = sqlite3.connect(DB_LOC)
             conn.execute('DROP TABLE IF EXISTS CORPUS')
             conn.execute('DROP TABLE IF EXISTS RESULTS')
         # This would do well with exception handling
@@ -158,10 +170,12 @@ def click_main(init, play, update, drop, visualize, study, query):
     if study:
         StudyUI.main()
     if query:
-        conn = sqlite3.connect('./data/JT2')
+        conn = sqlite3.connect(DB_LOC)
         q = input('enter query: ')
         df = pd.read_sql(q, conn)
         print(df)
+    if rds:
+        rds_config = aws.to_rds('./data/jtrainDW')
     if not (play or update or drop or study or visualize or init or query):
         main()
     print(time.time()-start)

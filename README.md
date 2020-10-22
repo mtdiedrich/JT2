@@ -3,6 +3,7 @@ A Python utility to play J! Data collection, training and playing mechanism, num
 
 
 ## TODO
+* Utilize global variables and, where necessary, classes to prevent call on import
 * Add URL links to DB table
 * Better download logic (?)
 * Auto-scheduler on Ubuntu with appropriate logging

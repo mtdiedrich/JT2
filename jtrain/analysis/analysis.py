@@ -15,10 +15,6 @@ def correct_topic_comparison():
     class_df = db_interface.get_table('CLASSIFICATION')
     df = df.merge(class_df, left_on='Answer', right_on='answer')
     grp = df.groupby('Result')
-    """
-    for k, i in grp:
-        print(i.groupby('answer').count())
-    """
     docs = [' '.join(list(item['classification'].values)) for key, item in grp]
     docs = [s.translate(str.maketrans('', '', string.punctuation)) for s in docs]
     keys = [k for k, i in grp]
