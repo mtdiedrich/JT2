@@ -1,5 +1,8 @@
 # JT2
-A Python utility to play J! Data collection, training and playing mechanism, numerical and visual analytics.
+A Python utility to play J! Data collection, training and playing mechanism,
+numerical and visual analytics. Many variables/functions are kept deliberately
+vague to reduce probability of this repo being found by would-be competitors.
+If you found this repo while looking for studying tools, congratulations.
 
 
 ## TODO
