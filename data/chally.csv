@@ -1,0 +1,225 @@
+Match Day,Date,Weekday,Home,Result,Away,,True Result,e1,e2,e3,e4
+1,9/14/2020,Monday,Solar Flares,3-1,Dynamite,,3-1,500,500,625,375
+1,9/14/2020,Monday,Squalls,3-1,Toucans,,3-1,500,500,625,375
+1,9/14/2020,Monday,Hephaestus,2-2,Ospreys,,2-2,500,500,500,500
+1,9/14/2020,Monday,Polar Ice,0-4,Chia Pets,,0-4,500,500,250,750
+1,9/14/2020,Monday,TIE Fighters,4-0,Schnauzers,,4-0,500,500,750,250
+1,9/14/2020,Monday,Recycling Bins,2-2,Pawberry Pancakes,,2-2,500,500,500,500
+1,9/14/2020,Monday,Fruity Phantoms,3-1,Hydralisks,,3-1,500,500,625,375
+1,9/14/2020,Monday,Stingrays,4-0,Aurora,,4-0,500,500,750,250
+1,9/14/2020,Monday,Kraits,2-2,Triceratops,,2-2,500,500,500,500
+1,9/14/2020,Monday,Threshers,3-1,Guardians of the Galaxy,,3-1,500,500,625,375
+1,9/14/2020,Monday,Isopods,1-3,Arctic Foxes,,1-3,500,500,375,625
+1,9/14/2020,Monday,Tens,2-2,Garlic Fingers,,2-2,500,500,500,500
+1,9/14/2020,Monday,Saturn,2-2,Metal,,2-2,500,500,500,500
+1,9/14/2020,Monday,Paperboys,0-4,Shock,,0-4,500,500,250,750
+1,9/14/2020,Monday,Freemasons,3-1,Baboons,,3-1,500,500,625,375
+1,9/14/2020,Monday,Spartans,3-1,Panda Bears,,3-1,500,500,625,375
+2,9/16/2020,Wednesday,Dynamite,0-4,Toucans,,0-4,500,500,250,750
+2,9/16/2020,Wednesday,Solar Flares,1-3,Squalls,,1-3,500,500,375,625
+2,9/16/2020,Wednesday,Ospreys,2-2,Chia Pets,,2-2,500,500,500,500
+2,9/16/2020,Wednesday,Hephaestus,3-1,Polar Ice,,3-1,500,500,588,412
+2,9/16/2020,Wednesday,Schnauzers,1-3,Pawberry Pancakes,,1-3,500,500,412,588
+2,9/16/2020,Wednesday,TIE Fighters,3-1,Recycling Bins,,3-1,500,500,588,412
+2,9/16/2020,Wednesday,Hydralisks,0-4,Aurora,,0-4,500,500,323,677
+2,9/16/2020,Wednesday,Stingrays,1-3,Fruity Phantoms,,1-3,500,500,412,588
+2,9/16/2020,Wednesday,Triceratops,3-1,Guardians of the Galaxy,,3-1,500,500,588,412
+2,9/16/2020,Wednesday,Kraits,1-3,Threshers,,1-3,500,500,412,588
+2,9/16/2020,Wednesday,Arctic Foxes,2-2,Garlic Fingers,,2-2,500,500,500,500
+2,9/16/2020,Wednesday,Isopods,2-2,Tens,,2-2,500,500,500,500
+2,9/16/2020,Wednesday,Metal,2-2,Shock,,2-2,500,500,500,500
+2,9/16/2020,Wednesday,Saturn,1-3,Paperboys,,1-3,500,500,412,588
+2,9/16/2020,Wednesday,Baboons,2-2,Panda Bears,,2-2,500,500,500,500
+2,9/16/2020,Wednesday,Freemasons,0-4,Spartans,,0-4,500,500,323,677
+3,9/21/2020,Monday,Squalls,1-3,Dynamite,,1-3,500,500,412,588
+3,9/21/2020,Monday,Toucans,3-1,Solar Flares,,3-1,500,500,588,412
+3,9/21/2020,Monday,Polar Ice,3-1,Ospreys,,3-1,500,500,572,428
+3,9/21/2020,Monday,Chia Pets,4-0,Hephaestus,,4-0,500,500,644,356
+3,9/21/2020,Monday,Recycling Bins,4-0,Schnauzers,Schnauzers FF 4,0-0,500,500,500,500
+3,9/21/2020,Monday,Pawberry Pancakes,1-3,TIE Fighters,,1-3,500,500,428,572
+3,9/21/2020,Monday,Stingrays,1-3,Hydralisks,,1-3,500,500,428,572
+3,9/21/2020,Monday,Aurora,2-2,Fruity Phantoms,,2-2,500,500,500,500
+3,9/21/2020,Monday,Threshers,3-1,Triceratops,,3-1,500,500,572,428
+3,9/21/2020,Monday,Guardians of the Galaxy,3-1,Kraits,,3-1,500,500,572,428
+3,9/21/2020,Monday,Garlic Fingers,0-4,Isopods,,0-4,500,500,356,644
+3,9/21/2020,Monday,Tens,0-4,Arctic Foxes,,0-4,500,500,356,644
+3,9/21/2020,Monday,Paperboys,1-3,Metal,,1-3,500,500,428,572
+3,9/21/2020,Monday,Shock,4-0,Saturn,,4-0,500,500,644,356
+3,9/21/2020,Monday,Spartans,1-3,Baboons,,1-3,500,500,428,572
+3,9/21/2020,Monday,Panda Bears,1-3,Freemasons,,1-3,500,500,428,572
+4,9/23/2020,Wednesday,Ospreys,4-0,Dynamite,,4-0,500,500,625,356
+4,9/23/2020,Wednesday,Chia Pets,4-0,Toucans,,4-0,500,500,625,356
+4,9/23/2020,Wednesday,Hephaestus,2-2,Solar Flares,,2-2,500,500,500,500
+4,9/23/2020,Wednesday,Polar Ice,3-1,Squalls,,3-1,500,500,563,428
+4,9/23/2020,Wednesday,Hydralisks,2-2,Schnauzers,,2-2,500,500,500,500
+4,9/23/2020,Wednesday,Aurora,1-3,Pawberry Pancakes,,1-3,500,500,438,563
+4,9/23/2020,Wednesday,Fruity Phantoms,1-3,TIE Fighters,,1-3,500,500,438,563
+4,9/23/2020,Wednesday,Stingrays,2-2,Recycling Bins,,2-2,500,500,500,500
+4,9/23/2020,Wednesday,Arctic Foxes,2-2,Triceratops,,2-2,500,500,500,500
+4,9/23/2020,Wednesday,Garlic Fingers,2-2,Guardians of the Galaxy,,2-2,500,500,500,500
+4,9/23/2020,Wednesday,Isopods,4-0,Kraits,,4-0,500,500,625,375
+4,9/23/2020,Wednesday,Tens,1-3,Threshers,,1-3,500,500,438,563
+4,9/23/2020,Wednesday,Baboons,3-1,Metal,,3-1,500,500,563,438
+4,9/23/2020,Wednesday,Panda Bears,3-1,Shock,,3-1,500,500,563,438
+4,9/23/2020,Wednesday,Freemasons,3-1,Saturn,,3-1,500,500,563,438
+4,9/23/2020,Wednesday,Spartans,3-1,Paperboys,,3-1,500,500,563,438
+5,9/28/2020,Monday,Dynamite,2-2,Chia Pets,,2-2,500,500,500,500
+5,9/28/2020,Monday,Toucans,2-2,Ospreys,,2-2,500,500,500,500
+5,9/28/2020,Monday,Solar Flares,2-2,Polar Ice,,2-2,500,500,500,500
+5,9/28/2020,Monday,Squalls,1-3,Hephaestus,,1-3,500,500,438,556
+5,9/28/2020,Monday,Schnauzers,2-2,Aurora,,2-2,500,500,500,500
+5,9/28/2020,Monday,Pawberry Pancakes,2-2,Hydralisks,,2-2,500,500,500,500
+5,9/28/2020,Monday,TIE Fighters,2-2,Stingrays,,2-2,500,500,500,500
+5,9/28/2020,Monday,Recycling Bins,0-4,Fruity Phantoms,,0-4,500,500,375,612
+5,9/28/2020,Monday,Triceratops,2-2,Garlic Fingers,,2-2,500,500,500,500
+5,9/28/2020,Monday,Guardians of the Galaxy,1-3,Arctic Foxes,,1-3,500,500,444,556
+5,9/28/2020,Monday,Kraits,2-2,Tens,,2-2,500,500,500,500
+5,9/28/2020,Monday,Threshers,3-1,Isopods,,3-1,500,500,556,444
+5,9/28/2020,Monday,Metal,2-2,Panda Bears,,2-2,500,500,500,500
+5,9/28/2020,Monday,Shock,0-4,Baboons,,0-4,500,500,388,612
+5,9/28/2020,Monday,Saturn,1-3,Spartans,,1-3,500,500,444,556
+5,9/28/2020,Monday,Paperboys,2-2,Freemasons,,2-2,500,500,500,500
+6,9/30/2020,Wednesday,Hephaestus,3-1,Dynamite,,3-1,500,500,551,444
+6,9/30/2020,Wednesday,Polar Ice,2-2,Toucans,,2-2,500,500,500,500
+6,9/30/2020,Wednesday,Ospreys,2-2,Solar Flares,,2-2,500,500,500,500
+6,9/30/2020,Wednesday,Chia Pets,2-2,Squalls,,2-2,500,500,500,500
+6,9/30/2020,Wednesday,Fruity Phantoms,1-3,Schnauzers,,1-3,500,500,449,556
+6,9/30/2020,Wednesday,Stingrays,0-4,Pawberry Pancakes,,0-4,500,500,398,602
+6,9/30/2020,Wednesday,Hydralisks,0-4,TIE Fighters,,0-4,500,500,398,602
+6,9/30/2020,Wednesday,Aurora,3-1,Recycling Bins,,3-1,500,500,551,444
+6,9/30/2020,Wednesday,Isopods,3-1,Triceratops,,3-1,500,500,551,449
+6,9/30/2020,Wednesday,Tens,3-1,Guardians of the Galaxy,,3-1,500,500,551,449
+6,9/30/2020,Wednesday,Arctic Foxes,1-3,Kraits,,1-3,500,500,449,551
+6,9/30/2020,Wednesday,Garlic Fingers,2-2,Threshers,,2-2,500,500,500,500
+6,9/30/2020,Wednesday,Freemasons,3-1,Metal,,3-1,500,500,551,449
+6,9/30/2020,Wednesday,Spartans,3-1,Shock,,3-1,500,500,551,449
+6,9/30/2020,Wednesday,Baboons,3-1,Saturn,,3-1,500,500,551,449
+6,9/30/2020,Wednesday,Panda Bears,4-0,Paperboys,,4-0,500,500,602,398
+7,10/5/2020,Monday,Dynamite,2-2,Polar Ice,,2-2,500,500,500,500
+7,10/5/2020,Monday,Toucans,3-1,Hephaestus,,3-1,500,500,551,453
+7,10/5/2020,Monday,Solar Flares,0-4,Chia Pets,,0-4,500,500,398,594
+7,10/5/2020,Monday,Squalls,2-2,Ospreys,,2-2,500,500,500,500
+7,10/5/2020,Monday,Schnauzers,1-3,Stingrays,,1-3,500,500,449,547
+7,10/5/2020,Monday,Pawberry Pancakes,2-2,Fruity Phantoms,,2-2,500,500,500,500
+7,10/5/2020,Monday,TIE Fighters,4-0,Aurora,,4-0,500,500,594,406
+7,10/5/2020,Monday,Recycling Bins,2-2,Hydralisks,,2-2,500,500,500,500
+7,10/5/2020,Monday,Triceratops,3-1,Tens,,3-1,500,500,547,453
+7,10/5/2020,Monday,Guardians of the Galaxy,2-2,Isopods,,2-2,500,500,500,500
+7,10/5/2020,Monday,Kraits,1-3,Garlic Fingers,,1-3,500,500,453,547
+7,10/5/2020,Monday,Threshers,1-3,Arctic Foxes,,1-3,500,500,453,547
+7,10/5/2020,Monday,Metal,2-2,Spartans,,2-2,500,500,500,500
+7,10/5/2020,Monday,Shock,2-2,Freemasons,,2-2,500,500,500,500
+7,10/5/2020,Monday,Saturn,2-2,Panda Bears,,2-2,500,500,500,500
+7,10/5/2020,Monday,Paperboys,0-4,Baboons,,0-4,500,500,406,594
+8,10/7/2020,Wednesday,Triceratops,0-4,Dynamite,,0-4,500,500,412,594
+8,10/7/2020,Wednesday,Guardians of the Galaxy,2-2,Toucans,,2-2,500,500,500,500
+8,10/7/2020,Wednesday,Threshers,3-1,Solar Flares,,3-1,500,500,544,453
+8,10/7/2020,Wednesday,Kraits,0-4,Squalls,,0-4,500,500,412,594
+8,10/7/2020,Wednesday,Arctic Foxes,3-1,Ospreys,,3-1,500,500,544,456
+8,10/7/2020,Wednesday,Garlic Fingers,1-3,Chia Pets,,1-3,500,500,456,544
+8,10/7/2020,Wednesday,Tens,2-2,Hephaestus,,2-2,500,500,500,500
+8,10/7/2020,Wednesday,Isopods,0-4,Polar Ice,,0-4,500,500,412,588
+8,10/7/2020,Wednesday,Metal,3-1,Schnauzers,,3-1,500,500,544,453
+8,10/7/2020,Wednesday,Shock,4-0,Pawberry Pancakes,,4-0,500,500,588,412
+8,10/7/2020,Wednesday,Paperboys,0-4,TIE Fighters,,0-4,500,500,412,588
+8,10/7/2020,Wednesday,Saturn,2-2,Recycling Bins,,2-2,500,500,500,500
+8,10/7/2020,Wednesday,Baboons,1-3,Hydralisks,,1-3,500,500,456,544
+8,10/7/2020,Wednesday,Panda Bears,4-0,Aurora,,4-0,500,500,588,412
+8,10/7/2020,Wednesday,Spartans,1-3,Fruity Phantoms,,1-3,500,500,456,544
+8,10/7/2020,Wednesday,Freemasons,0-4,Stingrays,,0-4,500,500,412,588
+9,10/14/2020,Wednesday,Dynamite,3-1,Guardians of the Galaxy,,3-1,500,500,544,458
+9,10/14/2020,Wednesday,Toucans,2-2,Triceratops,,2-2,500,500,500,500
+9,10/14/2020,Wednesday,Solar Flares,3-1,Kraits,,3-1,500,500,544,458
+9,10/14/2020,Wednesday,Squalls,2-2,Threshers,,2-2,500,500,500,500
+9,10/14/2020,Wednesday,Ospreys,1-3,Garlic Fingers,,1-3,500,500,458,542
+9,10/14/2020,Wednesday,Chia Pets,2-2,Arctic Foxes,,2-2,500,500,500,500
+9,10/14/2020,Wednesday,Hephaestus,3-1,Isopods,,3-1,500,500,542,458
+9,10/14/2020,Wednesday,Polar Ice,4-0,Tens,,4-0,500,500,583,417
+9,10/14/2020,Wednesday,Schnauzers,1-3,Shock,,1-3,500,500,456,542
+9,10/14/2020,Wednesday,Pawberry Pancakes,3-1,Metal,,3-1,500,500,542,458
+9,10/14/2020,Wednesday,TIE Fighters,2-2,Saturn,,2-2,500,500,500,500
+9,10/14/2020,Wednesday,Recycling Bins,3-1,Paperboys,,3-1,500,500,544,458
+9,10/14/2020,Wednesday,Hydralisks,1-3,Panda Bears,,1-3,500,500,458,542
+9,10/14/2020,Wednesday,Aurora,4-0,Baboons,,4-0,500,500,583,417
+9,10/14/2020,Wednesday,Fruity Phantoms,2-2,Freemasons,,2-2,500,500,500,500
+9,10/14/2020,Wednesday,Stingrays,1-3,Spartans,,1-3,500,500,458,542
+10,10/19/2020,Monday,Kraits,2-2,Dynamite,,2-2,500,500,500,500
+10,10/19/2020,Monday,Threshers,3-1,Toucans,,3-1,500,500,540,458
+10,10/19/2020,Monday,Guardians of the Galaxy,3-1,Solar Flares,,3-1,500,500,540,458
+10,10/19/2020,Monday,Triceratops,3-1,Squalls,,3-1,500,500,540,458
+10,10/19/2020,Monday,Isopods,0-4,Ospreys,,0-4,500,500,421,579
+10,10/19/2020,Monday,Tens,0-4,Chia Pets,,0-4,500,500,421,579
+10,10/19/2020,Monday,Garlic Fingers,3-1,Hephaestus,,3-1,500,500,540,460
+10,10/19/2020,Monday,Arctic Foxes,2-2,Polar Ice,,2-2,500,500,500,500
+10,10/19/2020,Monday,Saturn,0-4,Schnauzers,,0-4,500,500,421,583
+10,10/19/2020,Monday,Paperboys,4-0,Pawberry Pancakes,,4-0,500,500,579,421
+10,10/19/2020,Monday,Shock,1-3,TIE Fighters,,1-3,500,500,460,540
+10,10/19/2020,Monday,Metal,3-1,Recycling Bins,,3-1,500,500,540,458
+10,10/19/2020,Monday,Freemasons,2-2,Hydralisks,,2-2,500,500,500,500
+10,10/19/2020,Monday,Spartans,0-4,Aurora,,0-4,500,500,421,579
+10,10/19/2020,Monday,Panda Bears,2-2,Fruity Phantoms,,2-2,500,500,500,500
+10,10/19/2020,Monday,Baboons,3-1,Stingrays,,3-1,500,500,540,460
+11,10/21/2020,Wednesday,Schnauzers,0-4,Dynamite,,0-4,500,500,421,579
+11,10/21/2020,Wednesday,Pawberry Pancakes,1-3,Toucans,,1-3,500,500,462,540
+11,10/21/2020,Wednesday,TIE Fighters,3-1,Solar Flares,,3-1,500,500,538,460
+11,10/21/2020,Wednesday,Recycling Bins,2-2,Squalls,,2-2,500,500,500,500
+11,10/21/2020,Wednesday,Hydralisks,1-3,Ospreys,,1-3,500,500,462,538
+11,10/21/2020,Wednesday,Aurora,1-3,Chia Pets,Olog-hai FF 1,1-3,500,500,462,538
+11,10/21/2020,Wednesday,Fruity Phantoms,2-2,Hephaestus,,2-2,500,500,500,500
+11,10/21/2020,Wednesday,Stingrays,1-3,Polar Ice,,1-3,500,500,462,538
+11,10/21/2020,Wednesday,Metal,3-1,Triceratops,,3-1,500,500,538,462
+11,10/21/2020,Wednesday,Shock,3-1,Guardians of the Galaxy,,3-1,500,500,538,462
+11,10/21/2020,Wednesday,Saturn,1-3,Kraits,,1-3,500,500,462,538
+11,10/21/2020,Wednesday,Paperboys,1-3,Threshers,,1-3,500,500,462,538
+11,10/21/2020,Wednesday,Baboons,4-0,Arctic Foxes,,4-0,500,500,575,425
+11,10/21/2020,Wednesday,Panda Bears,4-0,Garlic Fingers,,4-0,500,500,575,425
+11,10/21/2020,Wednesday,Freemasons,1-3,Isopods,,1-3,500,500,462,538
+11,10/21/2020,Wednesday,Spartans,4-0,Tens,,4-0,500,500,575,425
+12,10/26/2020,Monday,Dynamite,2-2,Hydralisks,,2-2,500,500,500,500
+12,10/26/2020,Monday,Toucans,2-2,Aurora,,2-2,500,500,500,500
+12,10/26/2020,Monday,Solar Flares,3-1,Fruity Phantoms,,3-1,500,500,538,464
+12,10/26/2020,Monday,Squalls,2-2,Stingrays,,2-2,500,500,500,500
+12,10/26/2020,Monday,Ospreys,2-2,Schnauzers,,2-2,500,500,500,500
+12,10/26/2020,Monday,Chia Pets,1-3,Pawberry Pancakes,,1-3,500,500,464,536
+12,10/26/2020,Monday,Hephaestus,0-4,TIE Fighters,,0-4,500,500,428,572
+12,10/26/2020,Monday,Polar Ice,3-1,Recycling Bins,,3-1,500,500,536,462
+12,10/26/2020,Monday,Triceratops,2-2,Baboons,,2-2,500,500,500,500
+12,10/26/2020,Monday,Guardians of the Galaxy,2-2,Panda Bears,,2-2,500,500,500,500
+12,10/26/2020,Monday,Kraits,3-1,Freemasons,,3-1,500,500,536,464
+12,10/26/2020,Monday,Threshers,2-2,Spartans,,2-2,500,500,500,500
+12,10/26/2020,Monday,Arctic Foxes,2-2,Metal,,2-2,500,500,500,500
+12,10/26/2020,Monday,Garlic Fingers,1-3,Shock,,1-3,500,500,464,536
+12,10/26/2020,Monday,Isopods,3-1,Saturn,,3-1,500,500,536,464
+12,10/26/2020,Monday,Tens,2-2,Paperboys,,2-2,500,500,500,500
+13,10/28/2020,Wednesday,Dynamite,3-1,Solar Flares,,3-1,500,500,536,464
+13,10/28/2020,Wednesday,Toucans,1-3,Squalls,,1-3,500,500,464,536
+13,10/28/2020,Wednesday,Ospreys,2-2,Hephaestus,,2-2,500,500,500,500
+13,10/28/2020,Wednesday,Chia Pets,3-1,Polar Ice,,3-1,500,500,535,465
+13,10/28/2020,Wednesday,Schnauzers,1-3,TIE Fighters,,1-3,500,500,464,535
+13,10/28/2020,Wednesday,Pawberry Pancakes,3-1,Recycling Bins,,3-1,500,500,535,464
+13,10/28/2020,Wednesday,Hydralisks,2-2,Fruity Phantoms,,2-2,500,500,500,500
+13,10/28/2020,Wednesday,Aurora,2-2,Stingrays,,2-2,500,500,500,500
+13,10/28/2020,Wednesday,Triceratops,3-1,Kraits,,3-1,500,500,535,465
+13,10/28/2020,Wednesday,Guardians of the Galaxy,3-1,Threshers,,3-1,500,500,535,465
+13,10/28/2020,Wednesday,Arctic Foxes,2-2,Isopods,,2-2,500,500,500,500
+13,10/28/2020,Wednesday,Garlic Fingers,1-3,Tens,,1-3,500,500,465,535
+13,10/28/2020,Wednesday,Metal,1-3,Saturn,,1-3,500,500,465,535
+13,10/28/2020,Wednesday,Shock,1-3,Paperboys,,1-3,500,500,465,535
+13,10/28/2020,Wednesday,Baboons,2-2,Freemasons,,2-2,500,500,500,500
+13,10/28/2020,Wednesday,Panda Bears,3-1,Spartans,,3-1,500,500,535,465
+14,11/2/2020,Monday,Toucans,1-3,Dynamite,,1-3,500,500,465,535
+14,11/2/2020,Monday,Squalls,3-1,Solar Flares,,3-1,500,500,535,465
+14,11/2/2020,Monday,Chia Pets,1-3,Ospreys,,1-3,500,500,467,533
+14,11/2/2020,Monday,Polar Ice,3-1,Hephaestus,,3-1,500,500,533,467
+14,11/2/2020,Monday,Pawberry Pancakes,1-3,Schnauzers,,1-3,500,500,467,535
+14,11/2/2020,Monday,Recycling Bins,2-2,TIE Fighters,,2-2,500,500,500,500
+14,11/2/2020,Monday,Aurora,2-2,Hydralisks,,2-2,500,500,500,500
+14,11/2/2020,Monday,Fruity Phantoms,3-1,Stingrays,,3-1,500,500,533,467
+14,11/2/2020,Monday,Guardians of the Galaxy,3-1,Triceratops,,3-1,500,500,533,467
+14,11/2/2020,Monday,Threshers,2-2,Kraits,,2-2,500,500,500,500
+14,11/2/2020,Monday,Garlic Fingers,3-1,Arctic Foxes,,3-1,500,500,533,467
+14,11/2/2020,Monday,Tens,2-2,Isopods,,2-2,500,500,500,500
+14,11/2/2020,Monday,Shock,3-1,Metal,,3-1,500,500,533,467
+14,11/2/2020,Monday,Paperboys,,Saturn,,2-2,500,500,,
+14,11/2/2020,Monday,Panda Bears,3-1,Baboons,,3-1,500,500,533,467
+14,11/2/2020,Monday,Spartans,3-1,Freemasons,,3-1,500,500,533,467
