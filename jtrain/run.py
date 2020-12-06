@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import (
         QRadioButton, QGridLayout, QApplication, QScrollArea, QHBoxLayout, QVBoxLayout
         )
 from study import study, StudyUI
-from pipeline import download, db_interface, aws
+from pipeline import download, db_interface, aws, sparknotes
 from analysis import analysis, visualization, topics, NLP
 from play import alex 
 
@@ -129,15 +129,11 @@ class App(QWidget):
 
 
 def main():
-    for i in range(5):
-        q = alex.Trebek()
-        print(q.category)
-        print(q.question)
-        print(q.options)
-        input('press enter')
-        print(q.answer)
-        input('press enter')
-        print()
+    links = sparknotes.build_sublink_list()
+    dfs = [pd.DataFrame(sparknotes.parse_lesser_topics(l)) for l in links] 
+    df = pd.concat(dfs).reset_index(drop=True)
+    print()
+    print(df)
 
 
 @click.command()
